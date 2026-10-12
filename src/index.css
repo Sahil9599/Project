@@ -10,3 +10,69 @@
     font-variant-numeric: tabular-nums;
   }
 }
+
+/* ==========================================================================
+   LIQUID GLASS HEADER STYLES
+   ========================================================================== */
+
+.liquid-glass {
+  --border-radius: 1.5rem;
+  border-radius: var(--border-radius);
+  position: relative;
+  transition: all 0.4s cubic-bezier(0.5, 1.5, 0.5, 1);
+}
+
+.liquid-glass--bend {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: var(--border-radius);
+  filter: url(#glass-blur);
+  inset: 0;
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.liquid-glass--face {
+  border-radius: var(--border-radius);
+  box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.12), 0 4px 12px rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.68);
+  inset: 0;
+  position: absolute;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.liquid-glass--edge {
+  border-radius: var(--border-radius);
+  box-shadow: inset 3px 3px 3px 0 rgba(255, 255, 255, 0.7),
+    inset -3px -3px 3px 0 rgba(255, 255, 255, 0.45);
+  inset: 0;
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.liquid-glass__link {
+  --icon-border-radius: 0.875rem;
+  border-radius: var(--icon-border-radius);
+  box-shadow: inset 1px 1px 1.5px 0 rgba(255, 255, 255, 0.65),
+    inset -1px -1px 1.5px 0 rgba(255, 255, 255, 0.4);
+  transition: all 0.3s cubic-bezier(0.5, 1.5, 0.5, 1);
+  position: relative;
+}
+
+.liquid-glass__link:hover {
+  transform: translateY(-1px);
+  box-shadow: inset 1px 2px 2px 0 rgba(255, 255, 255, 0.8),
+    inset -1px -2px 2px 0 rgba(255, 255, 255, 0.5),
+    0 4px 12px rgba(15, 23, 42, 0.08);
+}
+
+.liquid-glass__link.is-active {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.95), rgba(79, 70, 229, 0.95));
+  color: #ffffff;
+  box-shadow: inset 1px 2px 2px 0 rgba(255, 255, 255, 0.6),
+    inset -1px -2px 2px 0 rgba(255, 255, 255, 0.3),
+    0 6px 16px -2px rgba(37, 99, 235, 0.4);
+}
