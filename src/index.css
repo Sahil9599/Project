@@ -10,3 +10,190 @@
     font-variant-numeric: tabular-nums;
   }
 }
+
+/* ==========================================================================
+   USER SPECIFIED LIQUID GLASS STYLES
+   ========================================================================== */
+
+.liquidGlass-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  overflow: hidden;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.16), 0 0 20px rgba(255, 255, 255, 0.2);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 2.2);
+  border-radius: 0.75rem;
+}
+
+.liquidGlass-wrapper:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 0 28px rgba(255, 255, 255, 0.4);
+}
+
+.liquidGlass-wrapper:active {
+  transform: translateY(1px) scale(0.97);
+}
+
+.liquidGlass-effect {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  filter: url(#glass-distortion);
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.liquidGlass-tint {
+  z-index: 1;
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.50);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.liquidGlass-shine {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  border-radius: inherit;
+  box-shadow: inset 2px 2px 1.5px 0 rgba(255, 255, 255, 0.7),
+              inset -1px -1px 1.5px 1px rgba(255, 255, 255, 0.5);
+  pointer-events: none;
+}
+
+.liquidGlass-text {
+  position: relative;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* ==========================================================================
+   UNIVERSAL LIQUID GLASS BUTTON STYLES (Every button on the website)
+   ========================================================================== */
+
+button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08), 0 0 16px rgba(255, 255, 255, 0.2);
+  transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 2);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  isolation: isolate;
+  border-radius: 0.75rem;
+}
+
+button::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  filter: url(#glass-distortion);
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: inherit;
+  pointer-events: none;
+  transition: background 0.3s ease;
+}
+
+button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+  box-shadow: inset 2px 2px 1.5px 0 rgba(255, 255, 255, 0.65),
+              inset -1px -1px 1.5px 1px rgba(255, 255, 255, 0.45);
+  pointer-events: none;
+}
+
+/* Ensure inner contents sit above the liquid glass layers */
+button > * {
+  position: relative;
+  z-index: 2;
+}
+
+button:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.16), 0 0 24px rgba(255, 255, 255, 0.35);
+}
+
+button:active {
+  transform: translateY(1px) scale(0.97);
+}
+
+button:disabled {
+  opacity: 0.55;
+  transform: none !important;
+  box-shadow: none !important;
+  cursor: not-allowed;
+}
+
+/* Primary Sapphire Fluid Liquid Glass Buttons */
+button[class*="from-blue"]::before,
+button[class*="bg-blue-600"]::before,
+button.liquid-btn-primary::before {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.9), rgba(79, 70, 229, 0.88)) !important;
+}
+
+button[class*="from-blue"]::after,
+button[class*="bg-blue-600"]::after,
+button.liquid-btn-primary::after {
+  box-shadow: inset 2px 2px 2px 0 rgba(255, 255, 255, 0.65),
+              inset -1px -1px 1.5px 1px rgba(191, 219, 254, 0.45) !important;
+}
+
+button[class*="from-blue"],
+button[class*="bg-blue-600"],
+button.liquid-btn-primary {
+  color: #ffffff !important;
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35), 0 0 20px rgba(59, 130, 246, 0.25) !important;
+}
+
+button[class*="from-blue"]:hover,
+button[class*="bg-blue-600"]:hover,
+button.liquid-btn-primary:hover {
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.45), 0 0 30px rgba(59, 130, 246, 0.4) !important;
+}
+
+/* Danger / Delete Liquid Glass Button */
+button[class*="hover:text-red-600"]:hover::before,
+button[class*="hover:text-red-500"]:hover::before {
+  background: rgba(254, 226, 226, 0.85) !important;
+}
+
+/* Subtle Dock / Floating Bar */
+.dock {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: 2rem;
+  padding: 0.6rem;
+}
+
+.dock,
+.dock > div {
+  border-radius: 2rem;
+}
+
+.dock:hover {
+  padding: 0.8rem;
+  border-radius: 2.5rem;
+}
+.dock:hover > div {
+  border-radius: 2.5rem;
+}
