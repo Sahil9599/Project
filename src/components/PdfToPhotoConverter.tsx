@@ -20,12 +20,10 @@ import {
 } from 'lucide-react';
 
 interface PdfToPhotoConverterProps {
-  onOpenAuth: () => void;
   onGoToVault: () => void;
 }
 
 export const PdfToPhotoConverter: React.FC<PdfToPhotoConverterProps> = ({
-  onOpenAuth,
   onGoToVault,
 }) => {
   const { user } = useAuth();

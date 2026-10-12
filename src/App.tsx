@@ -1,17 +1,14 @@
 import React, { useState } from 'react';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import { AuthProvider } from './context/AuthContext';
 import { Header } from './components/Header';
 import { PhotoToPdfConverter } from './components/PhotoToPdfConverter';
 import { PdfToPhotoConverter } from './components/PdfToPhotoConverter';
 import { HistoryVault } from './components/HistoryVault';
-import { AuthModal } from './components/AuthModal';
 import { AnimatedBackground } from './components/AnimatedBackground';
 import { FileImage, FileText, HardDrive, Shield } from 'lucide-react';
 
 function AppContent() {
-  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<'photo-to-pdf' | 'pdf-to-photo' | 'cloud-vault' | 'history'>('photo-to-pdf');
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   return (
     <div className="min-h-screen relative bg-neutral-950 text-neutral-100 flex flex-col font-sans selection:bg-neutral-800 selection:text-white">
@@ -23,7 +20,6 @@ function AppContent() {
         <Header
           activeTab={activeTab}
           setActiveTab={setActiveTab}
-          onOpenAuthModal={() => setIsAuthModalOpen(true)}
         />
 
         {/* Main Workspace Viewport */}
@@ -73,14 +69,12 @@ function AppContent() {
         {/* Tab Views */}
         {activeTab === 'photo-to-pdf' && (
           <PhotoToPdfConverter
-            onOpenAuth={() => setIsAuthModalOpen(true)}
             onGoToVault={() => setActiveTab('cloud-vault')}
           />
         )}
 
         {activeTab === 'pdf-to-photo' && (
           <PdfToPhotoConverter
-            onOpenAuth={() => setIsAuthModalOpen(true)}
             onGoToVault={() => setActiveTab('cloud-vault')}
           />
         )}
@@ -89,7 +83,6 @@ function AppContent() {
           <HistoryVault
             initialSubTab="vault"
             onNavigateToConvert={(t) => setActiveTab(t)}
-            onOpenAuth={() => setIsAuthModalOpen(true)}
           />
         )}
 
@@ -97,7 +90,6 @@ function AppContent() {
           <HistoryVault
             initialSubTab="history"
             onNavigateToConvert={(t) => setActiveTab(t)}
-            onOpenAuth={() => setIsAuthModalOpen(true)}
           />
         )}
       </main>
@@ -120,12 +112,6 @@ function AppContent() {
           </div>
         </div>
       </footer>
-
-      {/* Auth Modal */}
-      <AuthModal
-        isOpen={isAuthModalOpen}
-        onClose={() => setIsAuthModalOpen(false)}
-      />
       </div>
     </div>
   );

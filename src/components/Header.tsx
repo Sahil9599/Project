@@ -1,20 +1,15 @@
 import React from 'react';
-import { useAuth } from '../context/AuthContext';
-import { User, LogOut, ShieldCheck } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 
 interface HeaderProps {
   activeTab: 'photo-to-pdf' | 'pdf-to-photo' | 'cloud-vault' | 'history';
   setActiveTab: (tab: 'photo-to-pdf' | 'pdf-to-photo' | 'cloud-vault' | 'history') => void;
-  onOpenAuthModal: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   activeTab,
   setActiveTab,
-  onOpenAuthModal,
 }) => {
-  const { user, signOut } = useAuth();
-  const [showUserMenu, setShowUserMenu] = React.useState(false);
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-neutral-800/80 bg-neutral-950/80 backdrop-blur-md">
@@ -71,59 +66,12 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
         </nav>
 
-        {/* Zone 3: Account dropdown if active */}
-        <div className="flex items-center gap-3 shrink-0 relative">
-          {user && (
-            <div className="relative">
-              <button
-                onClick={() => setShowUserMenu(!showUserMenu)}
-                className="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-neutral-200 bg-neutral-900 border border-neutral-800 rounded-lg hover:border-neutral-700 hover:bg-neutral-800/80 transition-colors whitespace-nowrap shrink-0"
-              >
-                <User className="w-3.5 h-3.5 text-neutral-400" />
-                <span className="max-w-[120px] truncate">
-                  {user.displayName || user.email || 'My Account'}
-                </span>
-              </button>
-
-              {showUserMenu && (
-                <div
-                  className="absolute right-0 mt-2 w-64 rounded-xl bg-neutral-900 border border-neutral-800 shadow-xl p-3 z-50 animate-in fade-in zoom-in-95 duration-100"
-                  onClick={() => setShowUserMenu(false)}
-                >
-                  <div className="px-2 py-1.5 border-b border-neutral-800 mb-2">
-                    <p className="text-xs text-neutral-400">Active session</p>
-                    <p className="text-xs font-semibold text-neutral-200 truncate mt-0.5">
-                      {user.email || 'Private Workspace'}
-                    </p>
-                    <div className="flex items-center gap-1.5 mt-2 text-[11px] text-neutral-400 font-mono">
-                      <ShieldCheck className="w-3 h-3 text-neutral-300 shrink-0" />
-                      <span className="truncate">UID: {user.uid}</span>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => setActiveTab('cloud-vault')}
-                    className="w-full text-left px-2 py-1.5 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-md transition-colors"
-                  >
-                    Personal Vault
-                  </button>
-                  <button
-                    onClick={() => setActiveTab('history')}
-                    className="w-full text-left px-2 py-1.5 text-xs text-neutral-300 hover:text-white hover:bg-neutral-800 rounded-md transition-colors"
-                  >
-                    Conversion History
-                  </button>
-                  <button
-                    onClick={() => signOut()}
-                    className="w-full text-left px-2 py-1.5 text-xs text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-md transition-colors flex items-center gap-1.5 mt-1"
-                  >
-                    <LogOut className="w-3.5 h-3.5" />
-                    <span>Reset Session</span>
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
+        {/* Zone 3: Privacy & Security Badge (No sign in button) */}
+        <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-neutral-300 bg-neutral-900/80 border border-neutral-800 rounded-lg shadow-sm">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+            <span>Secure & Private</span>
+          </div>
         </div>
       </div>
 

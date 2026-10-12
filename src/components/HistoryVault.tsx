@@ -26,13 +26,11 @@ import {
 interface HistoryVaultProps {
   initialSubTab?: 'vault' | 'history';
   onNavigateToConvert: (type: 'photo-to-pdf' | 'pdf-to-photo') => void;
-  onOpenAuth: () => void;
 }
 
 export const HistoryVault: React.FC<HistoryVaultProps> = ({
   initialSubTab = 'vault',
   onNavigateToConvert,
-  onOpenAuth,
 }) => {
   const { user } = useAuth();
   const [subTab, setSubTab] = useState<'vault' | 'history'>(initialSubTab);
