@@ -71,9 +71,9 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
         </nav>
 
-        {/* Zone 3: 1 primary action */}
+        {/* Zone 3: Account dropdown if active */}
         <div className="flex items-center gap-3 shrink-0 relative">
-          {user ? (
+          {user && (
             <div className="relative">
               <button
                 onClick={() => setShowUserMenu(!showUserMenu)}
@@ -91,9 +91,9 @@ export const Header: React.FC<HeaderProps> = ({
                   onClick={() => setShowUserMenu(false)}
                 >
                   <div className="px-2 py-1.5 border-b border-neutral-800 mb-2">
-                    <p className="text-xs text-neutral-400">Signed in as</p>
+                    <p className="text-xs text-neutral-400">Active session</p>
                     <p className="text-xs font-semibold text-neutral-200 truncate mt-0.5">
-                      {user.email || 'Guest User'}
+                      {user.email || 'Private Workspace'}
                     </p>
                     <div className="flex items-center gap-1.5 mt-2 text-[11px] text-neutral-400 font-mono">
                       <ShieldCheck className="w-3 h-3 text-neutral-300 shrink-0" />
@@ -118,18 +118,11 @@ export const Header: React.FC<HeaderProps> = ({
                     className="w-full text-left px-2 py-1.5 text-xs text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-md transition-colors flex items-center gap-1.5 mt-1"
                   >
                     <LogOut className="w-3.5 h-3.5" />
-                    <span>Sign Out</span>
+                    <span>Reset Session</span>
                   </button>
                 </div>
               )}
             </div>
-          ) : (
-            <button
-              onClick={onOpenAuthModal}
-              className="px-4 py-2 text-xs font-medium text-neutral-950 bg-neutral-100 hover:bg-white rounded-lg transition-colors whitespace-nowrap shrink-0"
-            >
-              Sign In
-            </button>
           )}
         </div>
       </div>

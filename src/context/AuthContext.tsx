@@ -88,8 +88,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setUserProfile(null);
           }
         } else {
-          setUser(null);
-          setUserProfile(null);
+          const guestId = `guest_${Date.now().toString(36)}_${Math.random().toString(36).substring(2, 6)}`;
+          const autoUser: AppUser = {
+            uid: guestId,
+            email: `guest@documorph.local`,
+            displayName: `Private Workspace`,
+            isLocalOnly: true,
+          };
+          setUser(autoUser);
+          localStorage.setItem(LOCAL_SESSION_KEY, JSON.stringify(autoUser));
+          syncUserProfile({
+            uid: guestId,
+            email: autoUser.email,
+            displayName: autoUser.displayName,
+          }).then((prof) => setUserProfile(prof)).catch(() => {});
         }
       }
       setLoading(false);

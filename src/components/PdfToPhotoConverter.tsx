@@ -342,22 +342,10 @@ export const PdfToPhotoConverter: React.FC<PdfToPhotoConverterProps> = ({
           {/* Action Row */}
           <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="text-xs text-neutral-400">
-              {user ? (
-                <span className="flex items-center gap-1.5">
-                  <Cloud className="w-3.5 h-3.5 text-neutral-300" />
-                  <span>Rendered photo pages will sync to your private Cloud Vault</span>
-                </span>
-              ) : (
-                <span className="flex items-center gap-1.5">
-                  <button
-                    onClick={onOpenAuth}
-                    className="text-neutral-200 hover:underline font-medium"
-                  >
-                    Sign in
-                  </button>
-                  <span>to keep converted photos in your personal account</span>
-                </span>
-              )}
+              <span className="flex items-center gap-1.5">
+                <Cloud className="w-3.5 h-3.5 text-neutral-300" />
+                <span>Rendered photo pages are safely archived in your private vault</span>
+              </span>
             </div>
 
             <button

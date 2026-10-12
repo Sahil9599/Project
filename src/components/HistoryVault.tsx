@@ -108,28 +108,7 @@ export const HistoryVault: React.FC<HistoryVaultProps> = ({
 
   const totalVaultSize = files.reduce((acc, f) => acc + (f.sizeBytes || 0), 0);
 
-  if (!user) {
-    return (
-      <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-10 text-center max-w-xl mx-auto my-12 space-y-4">
-        <div className="w-12 h-12 rounded-full bg-neutral-800 text-neutral-300 flex items-center justify-center mx-auto">
-          <Shield className="w-6 h-6" />
-        </div>
-        <h2 className="text-xl font-bold text-neutral-100">
-          Personal Cloud Vault & Privacy Protection
-        </h2>
-        <p className="text-sm text-neutral-400">
-          Sign in to access your private storage vault and track conversion history. Each account has its own isolated User ID so only you can access your converted files.
-        </p>
-        <button
-          onClick={onOpenAuth}
-          className="px-6 py-2.5 bg-neutral-100 hover:bg-white text-neutral-950 rounded-xl text-xs font-semibold transition-colors shadow-sm inline-flex items-center gap-2"
-        >
-          <span>Sign In or Create Account</span>
-          <ArrowRight className="w-4 h-4" />
-        </button>
-      </div>
-    );
-  }
+  const currentUid = user?.uid || 'guest_user';
 
   return (
     <div className="space-y-6">
@@ -144,7 +123,7 @@ export const HistoryVault: React.FC<HistoryVaultProps> = ({
             Personal Cloud Storage & Conversion Logs
           </h1>
           <p className="text-xs text-neutral-400 font-mono">
-            User ID: <span className="text-neutral-200">{user.uid}</span>
+            User ID: <span className="text-neutral-200">{currentUid}</span>
           </p>
         </div>
 

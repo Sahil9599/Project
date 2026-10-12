@@ -60,22 +60,13 @@ function AppContent() {
               <Shield className="w-3.5 h-3.5 text-neutral-300" />
               <span>Client-Side Processing & Privacy Isolation</span>
             </div>
-            {user ? (
-              <button
-                onClick={() => setActiveTab('cloud-vault')}
-                className="text-neutral-200 hover:underline flex items-center gap-1 font-medium"
-              >
-                <HardDrive className="w-3.5 h-3.5" />
-                <span>Cloud Vault</span>
-              </button>
-            ) : (
-              <button
-                onClick={() => setIsAuthModalOpen(true)}
-                className="text-neutral-200 hover:underline font-medium"
-              >
-                Sign in to save files
-              </button>
-            )}
+            <button
+              onClick={() => setActiveTab('cloud-vault')}
+              className="text-neutral-300 hover:text-white hover:underline flex items-center gap-1 font-medium"
+            >
+              <HardDrive className="w-3.5 h-3.5" />
+              <span>Personal Vault</span>
+            </button>
           </div>
         </div>
 

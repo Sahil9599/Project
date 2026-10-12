@@ -503,22 +503,10 @@ export const PhotoToPdfConverter: React.FC<PhotoToPdfConverterProps> = ({
           {/* Action Row */}
           <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="text-xs text-neutral-400">
-              {user ? (
-                <span className="flex items-center gap-1.5">
-                  <Cloud className="w-3.5 h-3.5 text-neutral-300" />
-                  <span>Will be safely archived in your private Cloud Vault</span>
-                </span>
-              ) : (
-                <span className="flex items-center gap-1.5">
-                  <button
-                    onClick={onOpenAuth}
-                    className="text-neutral-200 hover:underline font-medium"
-                  >
-                    Sign in
-                  </button>
-                  <span>to automatically save converted files to your personal cloud</span>
-                </span>
-              )}
+              <span className="flex items-center gap-1.5">
+                <Cloud className="w-3.5 h-3.5 text-neutral-300" />
+                <span>Safely saved to your private encrypted vault</span>
+              </span>
             </div>
 
             <button
