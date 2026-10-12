@@ -5,7 +5,8 @@ import { PhotoToPdfConverter } from './components/PhotoToPdfConverter';
 import { PdfToPhotoConverter } from './components/PdfToPhotoConverter';
 import { HistoryVault } from './components/HistoryVault';
 import { AuthModal } from './components/AuthModal';
-import { FileImage, FileText, HardDrive, Shield, Lock, Layers } from 'lucide-react';
+import { AnimatedBackground } from './components/AnimatedBackground';
+import { FileImage, FileText, HardDrive, Shield } from 'lucide-react';
 
 function AppContent() {
   const { user } = useAuth();
@@ -13,7 +14,10 @@ function AppContent() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-100 flex flex-col font-sans selection:bg-neutral-800 selection:text-white">
+    <div className="min-h-screen relative bg-transparent text-neutral-100 flex flex-col font-sans selection:bg-neutral-800 selection:text-white">
+      {/* Dynamic Animated Ambient Background */}
+      <AnimatedBackground />
+
       {/* Top Bar Contract (3 Zones) */}
       <Header
         activeTab={activeTab}
