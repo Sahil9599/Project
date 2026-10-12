@@ -14,19 +14,20 @@ function AppContent() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   return (
-    <div className="min-h-screen relative bg-transparent text-neutral-100 flex flex-col font-sans selection:bg-neutral-800 selection:text-white">
+    <div className="min-h-screen relative bg-neutral-950 text-neutral-100 flex flex-col font-sans selection:bg-neutral-800 selection:text-white">
       {/* Dynamic Animated Ambient Background */}
       <AnimatedBackground />
 
-      {/* Top Bar Contract (3 Zones) */}
-      <Header
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        onOpenAuthModal={() => setIsAuthModalOpen(true)}
-      />
+      <div className="relative z-10 flex flex-col min-h-screen">
+        {/* Top Bar Contract (3 Zones) */}
+        <Header
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          onOpenAuthModal={() => setIsAuthModalOpen(true)}
+        />
 
-      {/* Main Workspace Viewport */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        {/* Main Workspace Viewport */}
+        <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* Mode Switcher Banner (Below Header) */}
         <div className="mb-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 border-b border-neutral-800/80 pb-6">
           <div className="flex items-center gap-1.5 p-1 bg-neutral-900 border border-neutral-800 rounded-xl self-start">
@@ -140,6 +141,7 @@ function AppContent() {
         isOpen={isAuthModalOpen}
         onClose={() => setIsAuthModalOpen(false)}
       />
+      </div>
     </div>
   );
 }

@@ -1,115 +1,84 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export const AnimatedBackground: React.FC = () => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [smoothPos, setSmoothPos] = useState({ x: 0, y: 0 });
-  const [cursorVisible, setCursorVisible] = useState(false);
-  const animFrameRef = useRef<number | null>(null);
+  const [hasInteracted, setHasInteracted] = useState(false);
 
   useEffect(() => {
-    let targetX = 0;
-    let targetY = 0;
-    let currentX = 0;
-    let currentY = 0;
-
     const handleMouseMove = (e: MouseEvent) => {
-      setCursorVisible(true);
-      targetX = e.clientX;
-      targetY = e.clientY;
-
+      setHasInteracted(true);
+      // Normalized from -1 to 1
       const normX = (e.clientX / window.innerWidth) * 2 - 1;
       const normY = (e.clientY / window.innerHeight) * 2 - 1;
       setMousePos({ x: normX, y: normY });
     };
 
-    const handleMouseLeave = () => {
-      setCursorVisible(false);
-    };
-
-    // Smooth animation loop for fluid cursor following
-    const updateSmoothPosition = () => {
-      currentX += (targetX - currentX) * 0.08;
-      currentY += (targetY - currentY) * 0.08;
-      setSmoothPos({ x: currentX, y: currentY });
-      animFrameRef.current = requestAnimationFrame(updateSmoothPosition);
-    };
-
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    document.addEventListener('mouseleave', handleMouseLeave);
-    animFrameRef.current = requestAnimationFrame(updateSmoothPosition);
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseleave', handleMouseLeave);
-      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
-    };
+    return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
   return (
-    <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden select-none">
-      {/* Deep neutral base background */}
-      <div className="absolute inset-0 bg-neutral-950" />
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden select-none bg-neutral-950">
+      {/* Primary Ambient Orb 1: Luminous Indigo Glow (Top Left) */}
+      <div
+        className="absolute top-[-8%] left-[5%] w-[650px] h-[650px] rounded-full blur-[100px] animate-orb-1 transition-transform duration-500 ease-out"
+        style={{
+          background: 'radial-gradient(circle, rgba(99, 102, 241, 0.45) 0%, rgba(79, 70, 229, 0.25) 50%, transparent 75%)',
+          transform: `translate(${mousePos.x * 55}px, ${mousePos.y * 50}px)`,
+        }}
+      />
 
-      {/* Interactive Cursor Spotlight / Halo */}
-      {cursorVisible && (
+      {/* Primary Ambient Orb 2: Deep Purple / Violet Glow (Bottom Right) */}
+      <div
+        className="absolute bottom-[-10%] right-[5%] w-[700px] h-[700px] rounded-full blur-[110px] animate-orb-2 transition-transform duration-500 ease-out"
+        style={{
+          background: 'radial-gradient(circle, rgba(168, 85, 247, 0.42) 0%, rgba(147, 51, 234, 0.22) 50%, transparent 75%)',
+          transform: `translate(${mousePos.x * -60}px, ${mousePos.y * -55}px)`,
+        }}
+      />
+
+      {/* Primary Ambient Orb 3: Cyan / Electric Blue Highlight (Center Right) */}
+      <div
+        className="absolute top-[35%] right-[20%] w-[500px] h-[500px] rounded-full blur-[90px] animate-orb-3 transition-transform duration-700 ease-out"
+        style={{
+          background: 'radial-gradient(circle, rgba(14, 165, 233, 0.35) 0%, rgba(59, 130, 246, 0.18) 50%, transparent 70%)',
+          transform: `translate(${mousePos.x * 40}px, ${mousePos.y * -35}px)`,
+        }}
+      />
+
+      {/* Primary Ambient Orb 4: Deep Slate & Magenta Underglow (Center Left) */}
+      <div
+        className="absolute top-[50%] left-[10%] w-[550px] h-[550px] rounded-full blur-[100px] animate-orb-1 transition-transform duration-700 ease-out"
+        style={{
+          background: 'radial-gradient(circle, rgba(192, 132, 252, 0.3) 0%, rgba(99, 102, 241, 0.15) 50%, transparent 70%)',
+          transform: `translate(${mousePos.x * -45}px, ${mousePos.y * 40}px)`,
+        }}
+      />
+
+      {/* Direct Interactive Mouse Follower Halo */}
+      {hasInteracted && (
         <div
-          className="absolute w-[450px] h-[450px] rounded-full blur-[110px] pointer-events-none transition-opacity duration-500"
+          className="absolute w-[500px] h-[500px] rounded-full blur-[90px] transition-transform duration-200 ease-out"
           style={{
-            left: `${smoothPos.x}px`,
-            top: `${smoothPos.y}px`,
-            transform: 'translate(-50%, -50%)',
-            background: 'radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, rgba(168, 85, 247, 0.08) 40%, transparent 70%)',
+            top: '50%',
+            left: '50%',
+            transform: `translate(calc(-50% + ${mousePos.x * (window.innerWidth / 2.5)}px), calc(-50% + ${mousePos.y * (window.innerHeight / 2.5)}px))`,
+            background: 'radial-gradient(circle, rgba(139, 92, 246, 0.35) 0%, rgba(99, 102, 241, 0.18) 45%, transparent 70%)',
           }}
         />
       )}
 
-      {/* Orb 1: Indigo Luminous Glow (Top-Left) */}
+      {/* Fine Geometric Grid Matrix for Tech Aesthetic */}
       <div
-        className="absolute top-[-5%] left-[10%] w-[600px] h-[600px] rounded-full blur-[140px] opacity-40 bg-gradient-to-br from-indigo-500/30 via-indigo-600/15 to-transparent transition-transform duration-700 ease-out animate-pulse"
-        style={{
-          transform: `translate(${mousePos.x * 40}px, ${mousePos.y * 35}px)`,
-          animationDuration: '7s',
-        }}
-      />
-
-      {/* Orb 2: Deep Purple / Violet Aura (Bottom-Right) */}
-      <div
-        className="absolute bottom-[-10%] right-[5%] w-[650px] h-[650px] rounded-full blur-[160px] opacity-35 bg-gradient-to-tl from-purple-600/30 via-fuchsia-600/15 to-transparent transition-transform duration-700 ease-out"
-        style={{
-          transform: `translate(${mousePos.x * -45}px, ${mousePos.y * -40}px)`,
-        }}
-      />
-
-      {/* Orb 3: Deep Slate & Cyan Accent (Center-Left) */}
-      <div
-        className="absolute top-[40%] left-[20%] w-[500px] h-[500px] rounded-full blur-[130px] opacity-25 bg-gradient-to-r from-cyan-500/15 via-slate-600/20 to-transparent transition-transform duration-1000 ease-out"
-        style={{
-          transform: `translate(${mousePos.x * 25}px, ${mousePos.y * 20}px)`,
-        }}
-      />
-
-      {/* Orb 4: Deep Slate Core Contrast (Center-Right) */}
-      <div
-        className="absolute top-[30%] right-[25%] w-[550px] h-[550px] rounded-full blur-[170px] opacity-25 bg-neutral-800/60 transition-transform duration-700 ease-out"
-        style={{
-          transform: `translate(${mousePos.x * -20}px, ${mousePos.y * -25}px)`,
-        }}
-      />
-
-      {/* Fine architectural micro-grid */}
-      <div
-        className="absolute inset-0 opacity-[0.035]"
+        className="absolute inset-0 opacity-[0.06]"
         style={{
           backgroundImage: `
-            linear-gradient(to right, #ffffff 1px, transparent 1px),
-            linear-gradient(to bottom, #ffffff 1px, transparent 1px)
+            linear-gradient(to right, rgba(255, 255, 255, 0.4) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(255, 255, 255, 0.4) 1px, transparent 1px)
           `,
           backgroundSize: '40px 40px',
         }}
       />
-
-      {/* Subtle Ambient Vignette */}
-      <div className="absolute inset-0 bg-radial-gradient from-transparent via-neutral-950/30 to-neutral-950 pointer-events-none" />
     </div>
   );
 };
