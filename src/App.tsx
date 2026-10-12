@@ -4,11 +4,12 @@ import { Header } from './components/Header';
 import { PhotoToPdfConverter } from './components/PhotoToPdfConverter';
 import { PdfToPhotoConverter } from './components/PdfToPhotoConverter';
 import { SignWatermarkConverter } from './components/SignWatermarkConverter';
+import { MergePdfsConverter } from './components/MergePdfsConverter';
 import { AnimatedBackground } from './components/AnimatedBackground';
-import { FileImage, FileText, Stamp, Shield } from 'lucide-react';
+import { FileImage, FileText, Stamp, Files, Shield } from 'lucide-react';
 
 function AppContent() {
-  const [activeTab, setActiveTab] = useState<'photo-to-pdf' | 'pdf-to-photo' | 'sign-watermark'>('photo-to-pdf');
+  const [activeTab, setActiveTab] = useState<'photo-to-pdf' | 'pdf-to-photo' | 'sign-watermark' | 'merge-pdfs'>('photo-to-pdf');
 
   return (
     <div className="min-h-screen relative text-slate-800 flex flex-col font-sans selection:bg-blue-600 selection:text-white">
@@ -26,10 +27,10 @@ function AppContent() {
         <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
           {/* Mode Switcher Banner (Below Header) */}
           <div className="mb-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-1.5 p-1.5 bg-white/80 backdrop-blur-xl border border-white/60 shadow-lg shadow-blue-950/5 rounded-2xl self-start">
+            <div className="flex flex-wrap items-center gap-1.5 p-1.5 bg-white/80 backdrop-blur-xl border border-white/60 shadow-lg shadow-blue-950/5 rounded-2xl self-start">
               <button
                 onClick={() => setActiveTab('photo-to-pdf')}
-                className={`px-4 py-2 text-xs font-semibold rounded-xl transition-all flex items-center gap-2 ${
+                className={`px-3.5 py-2 text-xs font-semibold rounded-xl transition-all flex items-center gap-2 ${
                   activeTab === 'photo-to-pdf'
                     ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
@@ -40,7 +41,7 @@ function AppContent() {
               </button>
               <button
                 onClick={() => setActiveTab('pdf-to-photo')}
-                className={`px-4 py-2 text-xs font-semibold rounded-xl transition-all flex items-center gap-2 ${
+                className={`px-3.5 py-2 text-xs font-semibold rounded-xl transition-all flex items-center gap-2 ${
                   activeTab === 'pdf-to-photo'
                     ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
@@ -51,7 +52,7 @@ function AppContent() {
               </button>
               <button
                 onClick={() => setActiveTab('sign-watermark')}
-                className={`px-4 py-2 text-xs font-semibold rounded-xl transition-all flex items-center gap-2 ${
+                className={`px-3.5 py-2 text-xs font-semibold rounded-xl transition-all flex items-center gap-2 ${
                   activeTab === 'sign-watermark'
                     ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
@@ -59,6 +60,17 @@ function AppContent() {
               >
                 <Stamp className="w-3.5 h-3.5" />
                 <span>Sign & Watermark</span>
+              </button>
+              <button
+                onClick={() => setActiveTab('merge-pdfs')}
+                className={`px-3.5 py-2 text-xs font-semibold rounded-xl transition-all flex items-center gap-2 ${
+                  activeTab === 'merge-pdfs'
+                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+                }`}
+              >
+                <Files className="w-3.5 h-3.5" />
+                <span>Merge PDFs</span>
               </button>
             </div>
 
@@ -76,6 +88,8 @@ function AppContent() {
           {activeTab === 'pdf-to-photo' && <PdfToPhotoConverter />}
 
           {activeTab === 'sign-watermark' && <SignWatermarkConverter />}
+
+          {activeTab === 'merge-pdfs' && <MergePdfsConverter />}
         </main>
 
         {/* Floating Liquid Glass Bottom Footer */}

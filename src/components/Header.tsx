@@ -2,8 +2,8 @@ import React from 'react';
 import { ShieldCheck } from 'lucide-react';
 
 interface HeaderProps {
-  activeTab: 'photo-to-pdf' | 'pdf-to-photo' | 'sign-watermark';
-  setActiveTab: (tab: 'photo-to-pdf' | 'pdf-to-photo' | 'sign-watermark') => void;
+  activeTab: 'photo-to-pdf' | 'pdf-to-photo' | 'sign-watermark' | 'merge-pdfs';
+  setActiveTab: (tab: 'photo-to-pdf' | 'pdf-to-photo' | 'sign-watermark' | 'merge-pdfs') => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -34,7 +34,7 @@ export const Header: React.FC<HeaderProps> = ({
           <nav className="hidden md:flex items-center gap-2 text-sm font-medium">
             <button
               onClick={() => setActiveTab('photo-to-pdf')}
-              className={`liquid-glass__link whitespace-nowrap shrink-0 px-4 py-2 text-xs font-semibold ${
+              className={`liquid-glass__link whitespace-nowrap shrink-0 px-3.5 py-2 text-xs font-semibold ${
                 activeTab === 'photo-to-pdf'
                   ? 'is-active'
                   : 'text-slate-700 hover:text-slate-900 bg-white/40'
@@ -44,7 +44,7 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
             <button
               onClick={() => setActiveTab('pdf-to-photo')}
-              className={`liquid-glass__link whitespace-nowrap shrink-0 px-4 py-2 text-xs font-semibold ${
+              className={`liquid-glass__link whitespace-nowrap shrink-0 px-3.5 py-2 text-xs font-semibold ${
                 activeTab === 'pdf-to-photo'
                   ? 'is-active'
                   : 'text-slate-700 hover:text-slate-900 bg-white/40'
@@ -54,13 +54,23 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
             <button
               onClick={() => setActiveTab('sign-watermark')}
-              className={`liquid-glass__link whitespace-nowrap shrink-0 px-4 py-2 text-xs font-semibold ${
+              className={`liquid-glass__link whitespace-nowrap shrink-0 px-3.5 py-2 text-xs font-semibold ${
                 activeTab === 'sign-watermark'
                   ? 'is-active'
                   : 'text-slate-700 hover:text-slate-900 bg-white/40'
               }`}
             >
               Sign & Watermark
+            </button>
+            <button
+              onClick={() => setActiveTab('merge-pdfs')}
+              className={`liquid-glass__link whitespace-nowrap shrink-0 px-3.5 py-2 text-xs font-semibold ${
+                activeTab === 'merge-pdfs'
+                  ? 'is-active'
+                  : 'text-slate-700 hover:text-slate-900 bg-white/40'
+              }`}
+            >
+              Merge PDFs
             </button>
           </nav>
 
@@ -74,7 +84,7 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Mobile nav subbar */}
-        <div className="md:hidden relative z-10 flex items-center justify-center gap-2 px-3 py-2 border-t border-white/50 text-xs font-medium text-slate-700 bg-white/30">
+        <div className="md:hidden relative z-10 flex flex-wrap items-center justify-center gap-1.5 px-3 py-2 border-t border-white/50 text-xs font-medium text-slate-700 bg-white/30">
           <button
             onClick={() => setActiveTab('photo-to-pdf')}
             className={`px-2.5 py-1 rounded-lg transition-all ${
@@ -98,6 +108,14 @@ export const Header: React.FC<HeaderProps> = ({
             }`}
           >
             Sign & Watermark
+          </button>
+          <button
+            onClick={() => setActiveTab('merge-pdfs')}
+            className={`px-2.5 py-1 rounded-lg transition-all ${
+              activeTab === 'merge-pdfs' ? 'bg-blue-600 text-white font-bold shadow-xs' : 'text-slate-700 hover:bg-white/40'
+            }`}
+          >
+            Merge PDFs
           </button>
         </div>
       </div>

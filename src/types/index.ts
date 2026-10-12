@@ -142,3 +142,29 @@ export interface ProcessedPdfResult {
   size: number;
   pageCount: number;
 }
+
+export interface MergePdfItem {
+  id: string;
+  file: File;
+  name: string;
+  size: number;
+  pageCount: number;
+  pageRange: string; // e.g. "all", "1-3", "2"
+  previewThumbnail?: string;
+  rotation?: 0 | 90 | 180 | 270;
+}
+
+export interface MergeOptions {
+  outputFileName: string;
+  includeBlankPageBetweenFiles: boolean;
+  normalizePageOrientation: 'keep' | 'portrait' | 'landscape';
+}
+
+export interface MergedPdfResult {
+  fileName: string;
+  blob: Blob;
+  dataUrl: string;
+  size: number;
+  totalPages: number;
+  includedFilesCount: number;
+}
