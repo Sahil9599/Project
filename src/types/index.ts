@@ -168,3 +168,31 @@ export interface MergedPdfResult {
   totalPages: number;
   includedFilesCount: number;
 }
+
+export interface SecurityCheckResult {
+  encrypted: boolean;
+  algorithm?: string;
+  version?: number;
+  revision?: number;
+  keyLength?: number;
+}
+
+export interface ProtectOptions {
+  userPassword: string; // Open Password
+  ownerPassword?: string; // Permissions / Master Password
+  outputFileName?: string;
+}
+
+export interface UnlockOptions {
+  password: string;
+  outputFileName?: string;
+}
+
+export interface ProtectedPdfResult {
+  fileName: string;
+  blob: Blob;
+  dataUrl: string;
+  size: number;
+  mode: 'protect' | 'unlock';
+  algorithm?: string;
+}

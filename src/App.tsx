@@ -5,11 +5,12 @@ import { PhotoToPdfConverter } from './components/PhotoToPdfConverter';
 import { PdfToPhotoConverter } from './components/PdfToPhotoConverter';
 import { SignWatermarkConverter } from './components/SignWatermarkConverter';
 import { MergePdfsConverter } from './components/MergePdfsConverter';
+import { ProtectUnlockConverter } from './components/ProtectUnlockConverter';
 import { AnimatedBackground } from './components/AnimatedBackground';
-import { FileImage, FileText, Stamp, Files, Shield } from 'lucide-react';
+import { FileImage, FileText, Stamp, Files, ShieldCheck, Shield } from 'lucide-react';
 
 function AppContent() {
-  const [activeTab, setActiveTab] = useState<'photo-to-pdf' | 'pdf-to-photo' | 'sign-watermark' | 'merge-pdfs'>('photo-to-pdf');
+  const [activeTab, setActiveTab] = useState<'photo-to-pdf' | 'pdf-to-photo' | 'sign-watermark' | 'merge-pdfs' | 'protect-unlock'>('photo-to-pdf');
 
   return (
     <div className="min-h-screen relative text-slate-800 flex flex-col font-sans selection:bg-blue-600 selection:text-white">
@@ -72,6 +73,17 @@ function AppContent() {
                 <Files className="w-3.5 h-3.5" />
                 <span>Merge PDFs</span>
               </button>
+              <button
+                onClick={() => setActiveTab('protect-unlock')}
+                className={`px-3.5 py-2 text-xs font-semibold rounded-xl transition-all flex items-center gap-2 ${
+                  activeTab === 'protect-unlock'
+                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+                }`}
+              >
+                <ShieldCheck className="w-3.5 h-3.5" />
+                <span>Protect & Unlock</span>
+              </button>
             </div>
 
             <div className="flex items-center gap-3 text-xs">
@@ -90,6 +102,8 @@ function AppContent() {
           {activeTab === 'sign-watermark' && <SignWatermarkConverter />}
 
           {activeTab === 'merge-pdfs' && <MergePdfsConverter />}
+
+          {activeTab === 'protect-unlock' && <ProtectUnlockConverter />}
         </main>
 
         {/* Floating Liquid Glass Bottom Footer */}

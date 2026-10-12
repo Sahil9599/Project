@@ -2,8 +2,8 @@ import React from 'react';
 import { ShieldCheck } from 'lucide-react';
 
 interface HeaderProps {
-  activeTab: 'photo-to-pdf' | 'pdf-to-photo' | 'sign-watermark' | 'merge-pdfs';
-  setActiveTab: (tab: 'photo-to-pdf' | 'pdf-to-photo' | 'sign-watermark' | 'merge-pdfs') => void;
+  activeTab: 'photo-to-pdf' | 'pdf-to-photo' | 'sign-watermark' | 'merge-pdfs' | 'protect-unlock';
+  setActiveTab: (tab: 'photo-to-pdf' | 'pdf-to-photo' | 'sign-watermark' | 'merge-pdfs' | 'protect-unlock') => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -72,6 +72,16 @@ export const Header: React.FC<HeaderProps> = ({
             >
               Merge PDFs
             </button>
+            <button
+              onClick={() => setActiveTab('protect-unlock')}
+              className={`liquid-glass__link whitespace-nowrap shrink-0 px-3.5 py-2 text-xs font-semibold ${
+                activeTab === 'protect-unlock'
+                  ? 'is-active'
+                  : 'text-slate-700 hover:text-slate-900 bg-white/40'
+              }`}
+            >
+              Protect & Unlock
+            </button>
           </nav>
 
           {/* Zone 3: Privacy & Security Badge */}
@@ -116,6 +126,14 @@ export const Header: React.FC<HeaderProps> = ({
             }`}
           >
             Merge PDFs
+          </button>
+          <button
+            onClick={() => setActiveTab('protect-unlock')}
+            className={`px-2.5 py-1 rounded-lg transition-all ${
+              activeTab === 'protect-unlock' ? 'bg-blue-600 text-white font-bold shadow-xs' : 'text-slate-700 hover:bg-white/40'
+            }`}
+          >
+            Protect & Unlock
           </button>
         </div>
       </div>

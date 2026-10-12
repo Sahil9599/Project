@@ -6,6 +6,8 @@
       "name": "react-example",
       "dependencies": {
         "@google/genai": "^2.4.0",
+        "@pdfsmaller/pdf-decrypt": "^1.0.1",
+        "@pdfsmaller/pdf-encrypt-lite": "^1.2.0",
         "@tailwindcss/vite": "^4.3.3",
         "@vitejs/plugin-react": "^6.1.1",
         "dotenv": "^17.2.3",
@@ -222,6 +224,10 @@
     "@pdf-lib/standard-fonts": ["@pdf-lib/standard-fonts@1.0.0", "", { "dependencies": { "pako": "^1.0.6" } }, "sha512-hU30BK9IUN/su0Mn9VdlVKsWBS6GyhVfqjwl1FjZN4TxP6cCw0jP2w7V3Hf5uX7M0AZJ16vey9yE0ny7Sa59ZA=="],
 
     "@pdf-lib/upng": ["@pdf-lib/upng@1.0.1", "", { "dependencies": { "pako": "^1.0.10" } }, "sha512-dQK2FUMQtowVP00mtIksrlZhdFXQZPC+taih1q4CvPZ5vqdxR/LKBaFg0oAfzd1GlHZXXSPdQfzQnt+ViGvEIQ=="],
+
+    "@pdfsmaller/pdf-decrypt": ["@pdfsmaller/pdf-decrypt@1.0.1", "", { "peerDependencies": { "pdf-lib": "^1.17.1" } }, "sha512-UO5KyC+jvcXPTuxfTcEDODHBqO5+YFyuYz/f8tQfiRw5hqZTYTh0ea72OjGw6kuYEUiCyT+A/Ymg2A948Vwx0w=="],
+
+    "@pdfsmaller/pdf-encrypt-lite": ["@pdfsmaller/pdf-encrypt-lite@1.2.0", "", { "peerDependencies": { "pdf-lib": "^1.17.1" } }, "sha512-CDSO++RmprLUyaDwk7M2YFPh50UASMpMm27Uki4lVmh/Y73bfF6R+y/c4kKBdMlBu9YICfiYTjD6B3MPOTu75Q=="],
 
     "@protobufjs/aspromise": ["@protobufjs/aspromise@1.1.2", "", {}, "sha512-j+gKExEuLmKwvz3OgROXtrJ2UG2x8Ch2YZUxahh+s1F2HZ+wAceUNLkvy6zKCPVRkU++ZWQrdxsUeQXmcg4uoQ=="],
 
