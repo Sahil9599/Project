@@ -1,0 +1,6 @@
+{
+  "name": "DocuMorph - Photo & PDF Batch Converter",
+  "description": "Minimalist Photo to PDF and PDF to Photo batch conversion studio with custom high-grade compression, personal cloud storage, conversion history, and privacy-first user accounts.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

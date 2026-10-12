@@ -1,0 +1,72 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User account profile and aggregate storage metrics",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 256 },
+        "displayName": { "type": "string", "maxLength": 128 },
+        "totalConversions": { "type": "number" },
+        "storageUsedBytes": { "type": "number" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["userId", "email", "createdAt", "updatedAt"]
+    },
+    "ConversionRecord": {
+      "title": "ConversionRecord",
+      "description": "History log entry of a batch photo-to-pdf or pdf-to-photo operation",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "conversionType": { "type": "string", "maxLength": 64 },
+        "originalFilesCount": { "type": "number" },
+        "originalFileNames": { "type": "array" },
+        "totalOriginalSizeBytes": { "type": "number" },
+        "totalResultSizeBytes": { "type": "number" },
+        "compressionQuality": { "type": "string", "maxLength": 64 },
+        "compressionRatio": { "type": "number" },
+        "status": { "type": "string", "maxLength": 32 },
+        "outputSummary": { "type": "string", "maxLength": 256 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "userId", "conversionType", "status", "createdAt", "updatedAt"]
+    },
+    "StoredFile": {
+      "title": "StoredFile",
+      "description": "Metadata and secure storage reference for converted PDF or photo items",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "conversionRecordId": { "type": "string", "maxLength": 128 },
+        "fileName": { "type": "string", "maxLength": 256 },
+        "fileType": { "type": "string", "maxLength": 64 },
+        "sizeBytes": { "type": "number" },
+        "fileData": { "type": "string", "maxLength": 1048576 },
+        "thumbnailUrl": { "type": "string", "maxLength": 262144 },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "userId", "fileName", "fileType", "sizeBytes", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile records containing account usage stats"
+    },
+    "/users/{userId}/conversions/{conversionId}": {
+      "schema": "ConversionRecord",
+      "description": "Private history log of user conversion batches"
+    },
+    "/users/{userId}/files/{fileId}": {
+      "schema": "StoredFile",
+      "description": "Private cloud-stored converted files accessible only by the owner"
+    }
+  }
+}
