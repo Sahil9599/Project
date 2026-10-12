@@ -1,6 +1,6 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
-import { User, LogOut, ShieldCheck, Download } from 'lucide-react';
+import { User, LogOut, ShieldCheck } from 'lucide-react';
 
 interface HeaderProps {
   activeTab: 'photo-to-pdf' | 'pdf-to-photo' | 'cloud-vault' | 'history';
@@ -73,15 +73,6 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Zone 3: 1 primary action */}
         <div className="flex items-center gap-3 shrink-0 relative">
-          <a
-            href="/documorph-source-code.zip"
-            download="documorph-source-code.zip"
-            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-neutral-300 hover:text-white bg-neutral-900 border border-neutral-800 rounded-lg hover:border-neutral-700 transition-colors whitespace-nowrap shrink-0"
-            title="Download full project source code as ZIP"
-          >
-            <Download className="w-3.5 h-3.5" />
-            <span>Download ZIP</span>
-          </a>
           {user ? (
             <div className="relative">
               <button

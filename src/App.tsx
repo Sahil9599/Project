@@ -121,15 +121,9 @@ function AppContent() {
           </div>
 
           <div className="flex items-center gap-4 text-neutral-400">
-            <a
-              href="/documorph-source-code.zip"
-              download="documorph-source-code.zip"
-              className="text-neutral-300 hover:text-white underline font-medium"
-            >
-              Download Full Source (.ZIP)
-            </a>
-            <span aria-hidden="true">·</span>
             <span>High-Fidelity Compression</span>
+            <span aria-hidden="true">·</span>
+            <span>Zero Server Re-encoding</span>
             <span aria-hidden="true">·</span>
             <span>Personal UID Cloud Isolation</span>
           </div>
