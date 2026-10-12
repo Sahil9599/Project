@@ -3,12 +3,11 @@ import { AuthProvider } from './context/AuthContext';
 import { Header } from './components/Header';
 import { PhotoToPdfConverter } from './components/PhotoToPdfConverter';
 import { PdfToPhotoConverter } from './components/PdfToPhotoConverter';
-import { HistoryVault } from './components/HistoryVault';
 import { AnimatedBackground } from './components/AnimatedBackground';
-import { FileImage, FileText, HardDrive, Shield } from 'lucide-react';
+import { FileImage, FileText, Shield } from 'lucide-react';
 
 function AppContent() {
-  const [activeTab, setActiveTab] = useState<'photo-to-pdf' | 'pdf-to-photo' | 'cloud-vault' | 'history'>('photo-to-pdf');
+  const [activeTab, setActiveTab] = useState<'photo-to-pdf' | 'pdf-to-photo'>('photo-to-pdf');
 
   return (
     <div className="min-h-screen relative text-slate-800 flex flex-col font-sans selection:bg-blue-600 selection:text-white">
@@ -56,42 +55,13 @@ function AppContent() {
                 <Shield className="w-3.5 h-3.5 text-blue-600" />
                 <span>Client-Side Processing & Privacy Isolation</span>
               </div>
-              <button
-                onClick={() => setActiveTab('cloud-vault')}
-                className="px-3 py-2 bg-white/75 backdrop-blur-xl border border-white/60 rounded-xl shadow-sm text-slate-700 hover:text-blue-600 hover:bg-white/95 transition-all flex items-center gap-1.5 font-semibold"
-              >
-                <HardDrive className="w-3.5 h-3.5 text-blue-600" />
-                <span>Personal Vault</span>
-              </button>
             </div>
           </div>
 
           {/* Tab Views */}
-          {activeTab === 'photo-to-pdf' && (
-            <PhotoToPdfConverter
-              onGoToVault={() => setActiveTab('cloud-vault')}
-            />
-          )}
+          {activeTab === 'photo-to-pdf' && <PhotoToPdfConverter />}
 
-          {activeTab === 'pdf-to-photo' && (
-            <PdfToPhotoConverter
-              onGoToVault={() => setActiveTab('cloud-vault')}
-            />
-          )}
-
-          {activeTab === 'cloud-vault' && (
-            <HistoryVault
-              initialSubTab="vault"
-              onNavigateToConvert={(t) => setActiveTab(t)}
-            />
-          )}
-
-          {activeTab === 'history' && (
-            <HistoryVault
-              initialSubTab="history"
-              onNavigateToConvert={(t) => setActiveTab(t)}
-            />
-          )}
+          {activeTab === 'pdf-to-photo' && <PdfToPhotoConverter />}
         </main>
 
         {/* Floating Liquid Glass Bottom Footer */}
@@ -120,7 +90,7 @@ function AppContent() {
                   Zero Server Re-encoding
                 </span>
                 <span className="liquid-glass__link px-3 py-1 bg-white/45 text-[11px] font-semibold text-slate-700 select-none">
-                  Encrypted Personal Vault
+                  Pure Client-Side Security
                 </span>
               </div>
             </div>

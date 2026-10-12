@@ -2,8 +2,8 @@ import React from 'react';
 import { ShieldCheck } from 'lucide-react';
 
 interface HeaderProps {
-  activeTab: 'photo-to-pdf' | 'pdf-to-photo' | 'cloud-vault' | 'history';
-  setActiveTab: (tab: 'photo-to-pdf' | 'pdf-to-photo' | 'cloud-vault' | 'history') => void;
+  activeTab: 'photo-to-pdf' | 'pdf-to-photo';
+  setActiveTab: (tab: 'photo-to-pdf' | 'pdf-to-photo') => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -52,26 +52,6 @@ export const Header: React.FC<HeaderProps> = ({
             >
               PDF to Photo
             </button>
-            <button
-              onClick={() => setActiveTab('cloud-vault')}
-              className={`liquid-glass__link whitespace-nowrap shrink-0 px-4 py-2 text-xs font-semibold ${
-                activeTab === 'cloud-vault'
-                  ? 'is-active'
-                  : 'text-slate-700 hover:text-slate-900 bg-white/40'
-              }`}
-            >
-              Cloud Vault
-            </button>
-            <button
-              onClick={() => setActiveTab('history')}
-              className={`liquid-glass__link whitespace-nowrap shrink-0 px-4 py-2 text-xs font-semibold ${
-                activeTab === 'history'
-                  ? 'is-active'
-                  : 'text-slate-700 hover:text-slate-900 bg-white/40'
-              }`}
-            >
-              History
-            </button>
           </nav>
 
           {/* Zone 3: Privacy & Security Badge */}
@@ -84,7 +64,7 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Mobile nav subbar */}
-        <div className="md:hidden relative z-10 flex items-center justify-around px-3 py-2 border-t border-white/50 text-xs font-medium text-slate-700 bg-white/30">
+        <div className="md:hidden relative z-10 flex items-center justify-center gap-3 px-3 py-2 border-t border-white/50 text-xs font-medium text-slate-700 bg-white/30">
           <button
             onClick={() => setActiveTab('photo-to-pdf')}
             className={`px-3 py-1 rounded-lg transition-all ${
@@ -100,22 +80,6 @@ export const Header: React.FC<HeaderProps> = ({
             }`}
           >
             PDF to Photo
-          </button>
-          <button
-            onClick={() => setActiveTab('cloud-vault')}
-            className={`px-3 py-1 rounded-lg transition-all ${
-              activeTab === 'cloud-vault' ? 'bg-blue-600 text-white font-bold shadow-xs' : 'text-slate-700 hover:bg-white/40'
-            }`}
-          >
-            Vault
-          </button>
-          <button
-            onClick={() => setActiveTab('history')}
-            className={`px-3 py-1 rounded-lg transition-all ${
-              activeTab === 'history' ? 'bg-blue-600 text-white font-bold shadow-xs' : 'text-slate-700 hover:bg-white/40'
-            }`}
-          >
-            History
           </button>
         </div>
       </div>

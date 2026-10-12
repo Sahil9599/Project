@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
 import { FileDropzone } from './FileDropzone';
 import { ProgressBar } from './ProgressBar';
 import { convertImagesToPdf } from '../lib/imageToPdf';
-import { saveConversionRecord, saveConvertedFileToVault } from '../lib/cloudStorage';
 import { downloadSingleFile, downloadPdfsAsZip } from '../lib/zipHelper';
 import type { ImageFileItem, ImageToPdfOptions, CompressionPreset, ConvertedPdfResult } from '../types';
 import {
@@ -15,18 +13,12 @@ import {
   Download,
   Sliders,
   CheckCircle2,
-  Cloud,
   FileCheck,
 } from 'lucide-react';
 
-interface PhotoToPdfConverterProps {
-  onGoToVault: () => void;
-}
+interface PhotoToPdfConverterProps {}
 
-export const PhotoToPdfConverter: React.FC<PhotoToPdfConverterProps> = ({
-  onGoToVault,
-}) => {
-  const { user } = useAuth();
+export const PhotoToPdfConverter: React.FC<PhotoToPdfConverterProps> = () => {
   const [items, setItems] = useState<ImageFileItem[]>([]);
   const [options, setOptions] = useState<ImageToPdfOptions>({
     pageSize: 'fit',
@@ -43,7 +35,6 @@ export const PhotoToPdfConverter: React.FC<PhotoToPdfConverterProps> = ({
   const [progress, setProgress] = useState(0);
   const [progressStatus, setProgressStatus] = useState('');
   const [results, setResults] = useState<ConvertedPdfResult[]>([]);
-  const [savedToCloud, setSavedToCloud] = useState(false);
   const [originalTotalSize, setOriginalTotalSize] = useState(0);
 
   const handleFilesSelected = (files: File[]) => {
@@ -63,7 +54,6 @@ export const PhotoToPdfConverter: React.FC<PhotoToPdfConverterProps> = ({
 
     setItems((prev) => [...prev, ...newItems]);
     setResults([]);
-    setSavedToCloud(false);
   };
 
   const handleRotate = (id: string) => {
@@ -134,39 +124,6 @@ export const PhotoToPdfConverter: React.FC<PhotoToPdfConverterProps> = ({
       });
 
       setResults(pdfs);
-
-      // Save to cloud if user is signed in
-      if (user) {
-        setProgressStatus('Securing converted documents in personal cloud vault...');
-        const totalResultSize = pdfs.reduce((acc, p) => acc + p.size, 0);
-        const ratio = totalInputSize > 0 ? (totalResultSize / totalInputSize) : 1;
-
-        const record = await saveConversionRecord(user.uid, {
-          conversionType: 'photo-to-pdf',
-          originalFilesCount: items.length,
-          originalFileNames: items.slice(0, 10).map((i) => i.name),
-          totalOriginalSizeBytes: totalInputSize,
-          totalResultSizeBytes: totalResultSize,
-          compressionQuality: options.preset,
-          compressionRatio: Number(ratio.toFixed(2)),
-          status: 'completed',
-          outputSummary: `${items.length} photo(s) → ${pdfs.length} PDF(s)`,
-        });
-
-        if (record) {
-          for (const pdf of pdfs) {
-            await saveConvertedFileToVault(
-              user.uid,
-              record.id,
-              pdf.fileName,
-              'application/pdf',
-              pdf.blob,
-              items[0]?.previewUrl
-            );
-          }
-          setSavedToCloud(true);
-        }
-      }
     } catch (err) {
       console.error('Conversion failed', err);
       alert(err instanceof Error ? err.message : 'Error converting images');
@@ -507,8 +464,8 @@ export const PhotoToPdfConverter: React.FC<PhotoToPdfConverterProps> = ({
           <div className="pt-3 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-100">
             <div className="text-xs text-slate-500 font-medium">
               <span className="flex items-center gap-1.5">
-                <Cloud className="w-4 h-4 text-blue-600" />
-                <span>Safely saved to your private encrypted vault</span>
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                <span>100% Client-Side Processing · No files uploaded to server</span>
               </span>
             </div>
 
@@ -609,22 +566,6 @@ export const PhotoToPdfConverter: React.FC<PhotoToPdfConverterProps> = ({
               </div>
             ))}
           </div>
-
-          {/* Cloud Vault feedback */}
-          {savedToCloud && (
-            <div className="flex items-center justify-between p-3.5 rounded-2xl bg-blue-50/90 border border-blue-100 text-xs text-blue-800">
-              <span className="flex items-center gap-2 font-medium">
-                <Cloud className="w-4 h-4 text-blue-600" />
-                <span>Files saved to your private Cloud Vault.</span>
-              </span>
-              <button
-                onClick={onGoToVault}
-                className="text-blue-700 hover:underline font-bold"
-              >
-                View in Vault &rarr;
-              </button>
-            </div>
-          )}
         </div>
       )}
     </div>
