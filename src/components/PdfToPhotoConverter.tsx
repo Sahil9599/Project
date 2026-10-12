@@ -3,19 +3,18 @@ import { useAuth } from '../context/AuthContext';
 import { FileDropzone } from './FileDropzone';
 import { ProgressBar } from './ProgressBar';
 import { ImagePreviewModal } from './ImagePreviewModal';
-import { convertPdfToImages, getPdfPageCount } from '../lib/pdfToImage';
+import { convertPdfToImages } from '../lib/pdfToImage';
 import { saveConversionRecord, saveConvertedFileToVault } from '../lib/cloudStorage';
 import { downloadSingleFile, downloadPhotosAsZip } from '../lib/zipHelper';
 import type { PdfFileItem, PdfToPhotoOptions, ConvertedPhotoResult } from '../types';
 import {
   FileText,
-  Sliders,
-  Download,
-  Eye,
-  CheckCircle2,
   Trash2,
+  Download,
+  Sliders,
+  CheckCircle2,
   Cloud,
-  Layers,
+  Eye,
   Sparkles,
 } from 'lucide-react';
 
@@ -33,37 +32,22 @@ export const PdfToPhotoConverter: React.FC<PdfToPhotoConverterProps> = ({
     scale: 2.0, // 144 DPI High Definition default
     quality: 0.9,
     pageRange: 'all',
-    customRange: '1-5',
   });
 
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
   const [progressStatus, setProgressStatus] = useState('');
   const [results, setResults] = useState<ConvertedPhotoResult[]>([]);
+  const [previewPhoto, setPreviewPhoto] = useState<ConvertedPhotoResult | null>(null);
   const [savedToCloud, setSavedToCloud] = useState(false);
 
-  // Preview modal state
-  const [previewPhoto, setPreviewPhoto] = useState<ConvertedPhotoResult | null>(null);
-
-  const handleFilesSelected = async (files: File[]) => {
-    const newItems: PdfFileItem[] = [];
-    for (const file of files) {
-      const item: PdfFileItem = {
-        id: `pdf_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
-        file,
-        name: file.name,
-        size: file.size,
-      };
-
-      // Probe page count
-      try {
-        item.pageCount = await getPdfPageCount(file);
-      } catch {
-        item.pageCount = undefined;
-      }
-
-      newItems.push(item);
-    }
+  const handleFilesSelected = (files: File[]) => {
+    const newItems: PdfFileItem[] = files.map((file) => ({
+      id: `pdf_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+      file,
+      name: file.name,
+      size: file.size,
+    }));
 
     setPdfItems((prev) => [...prev, ...newItems]);
     setResults([]);
@@ -80,7 +64,7 @@ export const PdfToPhotoConverter: React.FC<PdfToPhotoConverterProps> = ({
     if (pdfItems.length === 0) return;
     setIsProcessing(true);
     setProgress(0);
-    setProgressStatus('Initializing PDF render pipeline...');
+    setProgressStatus('Initializing PDF render canvas...');
 
     try {
       const photos = await convertPdfToImages(pdfItems, options, (p, status) => {
@@ -92,9 +76,8 @@ export const PdfToPhotoConverter: React.FC<PdfToPhotoConverterProps> = ({
 
       // Save to cloud if user is signed in
       if (user) {
-        setProgressStatus('Storing converted photos in personal cloud vault...');
+        setProgressStatus('Storing photos into personal cloud vault...');
         const totalResultSize = photos.reduce((acc, p) => acc + p.size, 0);
-        const ratio = totalInputSize > 0 ? totalResultSize / totalInputSize : 1;
 
         const record = await saveConversionRecord(user.uid, {
           conversionType: 'pdf-to-photo',
@@ -102,55 +85,54 @@ export const PdfToPhotoConverter: React.FC<PdfToPhotoConverterProps> = ({
           originalFileNames: pdfItems.map((p) => p.name),
           totalOriginalSizeBytes: totalInputSize,
           totalResultSizeBytes: totalResultSize,
-          compressionQuality: `${options.format.toUpperCase()} (${Math.round(options.quality * 100)}%)`,
-          compressionRatio: Number(ratio.toFixed(2)),
+          compressionQuality: `${options.scale * 72} DPI (${options.format.toUpperCase()})`,
           status: 'completed',
-          outputSummary: `${pdfItems.length} PDF(s) → ${photos.length} image photo(s)`,
+          outputSummary: `${pdfItems.length} PDF(s) → ${photos.length} Photo Page(s)`,
         });
 
         if (record) {
-          // Save up to 20 files directly to vault
-          for (let i = 0; i < Math.min(20, photos.length); i++) {
-            const photo = photos[i];
+          for (const photo of photos) {
             await saveConvertedFileToVault(
               user.uid,
               record.id,
               photo.fileName,
               `image/${options.format}`,
               photo.blob,
-              photo.dataUrl // Thumbnail
+              photo.dataUrl
             );
           }
           setSavedToCloud(true);
         }
       }
-    } catch (err: unknown) {
-      console.error('PDF to Photo error:', err);
-      setProgressStatus('Conversion failed. Please verify PDF integrity.');
+    } catch (err) {
+      console.error('PDF Conversion error:', err);
+      alert(err instanceof Error ? err.message : 'Failed to convert PDF documents');
     } finally {
       setIsProcessing(false);
+      setProgress(100);
+      setProgressStatus('Complete');
     }
   };
 
   const formatBytes = (bytes: number) => {
-    if (bytes === 0) return '0 B';
+    if (!bytes || bytes === 0) return '0 B';
     const k = 1024;
     const sizes = ['B', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
   };
 
-  const totalOutputSize = results.reduce((acc, curr) => acc + curr.size, 0);
+  const totalOutputSize = results.reduce((acc, p) => acc + p.size, 0);
 
   return (
     <div className="space-y-8">
       {/* Title */}
       <div>
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-neutral-100">
-          PDF to Photo Studio
+        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white drop-shadow-md">
+          PDF to Photo Extraction Studio
         </h1>
-        <p className="text-sm text-neutral-400 mt-1">
-          Render PDF documents into high-resolution JPEG, WebP, or PNG photos with batch ZIP export.
+        <p className="text-sm text-blue-100 font-medium drop-shadow-sm mt-1">
+          High-fidelity vector rasterization from PDF pages into crystal-clear JPEG, WebP, or PNG photos.
         </p>
       </div>
 
@@ -159,20 +141,20 @@ export const PdfToPhotoConverter: React.FC<PdfToPhotoConverterProps> = ({
         mode="pdf"
         accept="application/pdf,.pdf"
         onFilesSelected={handleFilesSelected}
-        title="Upload PDF files for extraction"
-        description="Select one or multiple PDF documents to render pages into photos."
+        title="Upload PDF files to rasterize"
+        description="Select or drop single or multi-page PDF documents. Batch processing enabled."
         disabled={isProcessing}
       />
 
-      {/* Batch PDFs Queue */}
+      {/* PDF Queue */}
       {pdfItems.length > 0 && (
-        <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6">
-          <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-neutral-800">
+        <div className="bg-white/85 backdrop-blur-xl border border-white/70 rounded-3xl p-6 shadow-xl shadow-blue-950/5">
+          <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-200">
             <div>
-              <h2 className="text-base font-semibold text-neutral-100">
-                PDF Batch Queue ({pdfItems.length})
+              <h2 className="text-base font-bold text-slate-900">
+                PDF Document Queue ({pdfItems.length})
               </h2>
-              <div className="flex items-center gap-2 text-xs text-neutral-400 mt-0.5">
+              <div className="flex items-center gap-2 text-xs text-slate-500 font-medium mt-0.5">
                 <span>Total payload: {formatBytes(totalInputSize)}</span>
               </div>
             </div>
@@ -180,25 +162,25 @@ export const PdfToPhotoConverter: React.FC<PdfToPhotoConverterProps> = ({
             <button
               onClick={() => setPdfItems([])}
               disabled={isProcessing}
-              className="px-3 py-1.5 text-xs text-neutral-400 hover:text-red-400 hover:bg-neutral-800 rounded-lg transition-colors"
+              className="px-3 py-1.5 text-xs font-semibold text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors"
             >
               Clear all
             </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 pt-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3.5 pt-4">
             {pdfItems.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center justify-between p-3 rounded-xl bg-neutral-950 border border-neutral-800"
+                className="flex items-center justify-between p-3.5 rounded-2xl bg-white border border-slate-200 shadow-xs hover:border-blue-300 transition-all"
               >
                 <div className="flex items-center gap-3 truncate pr-2">
-                  <div className="w-8 h-8 rounded-lg bg-neutral-800 flex items-center justify-center text-neutral-300 shrink-0">
+                  <div className="w-9 h-9 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 shrink-0">
                     <FileText className="w-4 h-4" />
                   </div>
                   <div className="truncate">
-                    <p className="text-xs font-medium text-neutral-200 truncate">{item.name}</p>
-                    <p className="text-[11px] font-mono text-neutral-400 tabular-nums">
+                    <p className="text-xs font-bold text-slate-900 truncate">{item.name}</p>
+                    <p className="text-[11px] font-mono text-slate-500 tabular-nums">
                       {formatBytes(item.size)}
                       {item.pageCount ? ` · ${item.pageCount} page(s)` : ''}
                     </p>
@@ -208,9 +190,10 @@ export const PdfToPhotoConverter: React.FC<PdfToPhotoConverterProps> = ({
                 <button
                   onClick={() => handleRemove(item.id)}
                   disabled={isProcessing}
-                  className="p-1 text-neutral-400 hover:text-red-400 rounded hover:bg-neutral-800 transition-colors"
+                  className="p-1.5 text-slate-400 hover:text-red-500 rounded-lg hover:bg-red-50 transition-colors"
+                  title="Remove"
                 >
-                  <Trash2 className="w-3.5 h-3.5" />
+                  <Trash2 className="w-4 h-4" />
                 </button>
               </div>
             ))}
@@ -220,10 +203,12 @@ export const PdfToPhotoConverter: React.FC<PdfToPhotoConverterProps> = ({
 
       {/* Rendering & Compression Controls */}
       {pdfItems.length > 0 && (
-        <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 space-y-6">
-          <div className="flex items-center gap-2 pb-3 border-b border-neutral-800">
-            <Sliders className="w-4 h-4 text-neutral-400" />
-            <h3 className="text-sm font-semibold text-neutral-100">
+        <div className="bg-white/85 backdrop-blur-xl border border-white/70 rounded-3xl p-6 space-y-6 shadow-xl shadow-blue-950/5">
+          <div className="flex items-center gap-2 pb-3 border-b border-slate-200">
+            <div className="p-1.5 rounded-lg bg-blue-50 text-blue-600">
+              <Sliders className="w-4 h-4" />
+            </div>
+            <h3 className="text-sm font-bold text-slate-900">
               Rendering Resolution & Image Quality
             </h3>
           </div>
@@ -231,7 +216,7 @@ export const PdfToPhotoConverter: React.FC<PdfToPhotoConverterProps> = ({
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {/* Resolution / DPI */}
             <div>
-              <label className="block text-xs font-medium text-neutral-300 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
                 Resolution & Sharpness (DPI)
               </label>
               <select
@@ -239,7 +224,7 @@ export const PdfToPhotoConverter: React.FC<PdfToPhotoConverterProps> = ({
                 onChange={(e) =>
                   setOptions((prev) => ({ ...prev, scale: parseFloat(e.target.value) }))
                 }
-                className="w-full px-3 py-2 bg-neutral-950 border border-neutral-800 rounded-lg text-xs text-neutral-200 focus:outline-none"
+                className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 shadow-xs"
               >
                 <option value={1.0}>Standard 72 DPI (Lightweight & Fast)</option>
                 <option value={2.0}>High Definition 144 DPI (Print & Clean Text)</option>
@@ -249,7 +234,7 @@ export const PdfToPhotoConverter: React.FC<PdfToPhotoConverterProps> = ({
 
             {/* Target Output Format */}
             <div>
-              <label className="block text-xs font-medium text-neutral-300 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
                 Output Image Format
               </label>
               <select
@@ -260,7 +245,7 @@ export const PdfToPhotoConverter: React.FC<PdfToPhotoConverterProps> = ({
                     format: e.target.value as 'jpeg' | 'png' | 'webp',
                   }))
                 }
-                className="w-full px-3 py-2 bg-neutral-950 border border-neutral-800 rounded-lg text-xs text-neutral-200 focus:outline-none"
+                className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 shadow-xs"
               >
                 <option value="jpeg">JPEG (Universal, Small)</option>
                 <option value="webp">WebP (Modern, High Compression)</option>
@@ -270,9 +255,9 @@ export const PdfToPhotoConverter: React.FC<PdfToPhotoConverterProps> = ({
 
             {/* Quality Slider */}
             <div>
-              <div className="flex justify-between text-xs text-neutral-300 mb-1">
+              <div className="flex justify-between text-xs font-semibold text-slate-700 mb-1">
                 <span>Compression Quality</span>
-                <span className="font-mono tabular-nums">
+                <span className="font-mono tabular-nums text-blue-600 font-bold">
                   {options.format === 'png' ? 'Lossless (100%)' : `${Math.round(options.quality * 100)}%`}
                 </span>
               </div>
@@ -286,15 +271,15 @@ export const PdfToPhotoConverter: React.FC<PdfToPhotoConverterProps> = ({
                 onChange={(e) =>
                   setOptions((prev) => ({ ...prev, quality: parseFloat(e.target.value) }))
                 }
-                className="w-full accent-neutral-100 cursor-pointer disabled:opacity-40"
+                className="w-full accent-blue-600 cursor-pointer disabled:opacity-40"
               />
             </div>
           </div>
 
           {/* Page Range Selection */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-neutral-800/80">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
             <div>
-              <label className="block text-xs font-medium text-neutral-300 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
                 Pages to Render
               </label>
               <div className="grid grid-cols-3 gap-2">
@@ -302,10 +287,10 @@ export const PdfToPhotoConverter: React.FC<PdfToPhotoConverterProps> = ({
                   <button
                     key={r}
                     onClick={() => setOptions((prev) => ({ ...prev, pageRange: r }))}
-                    className={`py-1.5 px-3 rounded-lg text-xs font-medium border text-center transition-colors ${
+                    className={`py-2 px-3 rounded-xl text-xs font-semibold border text-center transition-all ${
                       options.pageRange === r
-                        ? 'bg-neutral-100 text-neutral-950 border-white'
-                        : 'bg-neutral-950 text-neutral-300 border-neutral-800 hover:border-neutral-700'
+                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25 border-transparent'
+                        : 'bg-white text-slate-700 border-slate-200 hover:border-blue-300 hover:bg-slate-50 shadow-xs'
                     }`}
                   >
                     {r === 'all' && 'All Pages'}
@@ -318,7 +303,7 @@ export const PdfToPhotoConverter: React.FC<PdfToPhotoConverterProps> = ({
 
             {options.pageRange === 'custom' && (
               <div>
-                <label className="block text-xs font-medium text-neutral-300 mb-1">
+                <label className="block text-xs font-semibold text-slate-700 mb-1">
                   Custom Range Specification
                 </label>
                 <input
@@ -328,9 +313,9 @@ export const PdfToPhotoConverter: React.FC<PdfToPhotoConverterProps> = ({
                     setOptions((prev) => ({ ...prev, customRange: e.target.value }))
                   }
                   placeholder="e.g. 1-3, 5, 8"
-                  className="w-full px-3 py-1.5 bg-neutral-950 border border-neutral-800 rounded-lg text-xs text-neutral-200 focus:outline-none"
+                  className="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 shadow-xs"
                 />
-                <p className="text-[10px] text-neutral-400 mt-1">
+                <p className="text-[10px] text-slate-500 mt-1">
                   Separate single pages with commas or ranges with hyphens
                 </p>
               </div>
@@ -338,10 +323,10 @@ export const PdfToPhotoConverter: React.FC<PdfToPhotoConverterProps> = ({
           </div>
 
           {/* Action Row */}
-          <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="text-xs text-neutral-400">
+          <div className="pt-3 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-slate-100">
+            <div className="text-xs text-slate-500 font-medium">
               <span className="flex items-center gap-1.5">
-                <Cloud className="w-3.5 h-3.5 text-neutral-300" />
+                <Cloud className="w-4 h-4 text-blue-600" />
                 <span>Rendered photo pages are safely archived in your private vault</span>
               </span>
             </div>
@@ -349,7 +334,7 @@ export const PdfToPhotoConverter: React.FC<PdfToPhotoConverterProps> = ({
             <button
               onClick={handleConvert}
               disabled={isProcessing || pdfItems.length === 0}
-              className="w-full sm:w-auto px-6 py-2.5 bg-neutral-100 hover:bg-white text-neutral-950 rounded-xl text-xs font-semibold transition-all shadow-md disabled:opacity-50 flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-7 py-3 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500 hover:from-blue-500 hover:to-indigo-500 text-white rounded-2xl text-xs font-bold transition-all shadow-lg shadow-blue-500/30 disabled:opacity-50 flex items-center justify-center gap-2"
             >
               <Sparkles className="w-4 h-4" />
               <span>Render {pdfItems.length} PDF{pdfItems.length === 1 ? '' : 's'} to Photos</span>
@@ -367,15 +352,17 @@ export const PdfToPhotoConverter: React.FC<PdfToPhotoConverterProps> = ({
 
       {/* Results Gallery */}
       {results.length > 0 && !isProcessing && (
-        <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-6 space-y-6 animate-in fade-in duration-200">
-          <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-neutral-800">
-            <div className="flex items-center gap-2.5">
-              <CheckCircle2 className="w-5 h-5 text-neutral-100" />
+        <div className="bg-white/85 backdrop-blur-xl border border-white/70 rounded-3xl p-6 space-y-6 shadow-xl shadow-blue-950/5 animate-in fade-in duration-200">
+          <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-200">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100">
+                <CheckCircle2 className="w-5 h-5" />
+              </div>
               <div>
-                <h3 className="text-base font-semibold text-neutral-100">
+                <h3 className="text-base font-bold text-slate-900">
                   Rendered Photo Gallery ({results.length} Page{results.length === 1 ? '' : 's'})
                 </h3>
-                <div className="flex items-center gap-2 text-xs text-neutral-400 mt-0.5">
+                <div className="flex items-center gap-2 text-xs text-slate-500 font-medium mt-0.5">
                   <span>Total size: {formatBytes(totalOutputSize)}</span>
                   <span aria-hidden="true">·</span>
                   <span>Format: {options.format.toUpperCase()}</span>
@@ -386,9 +373,9 @@ export const PdfToPhotoConverter: React.FC<PdfToPhotoConverterProps> = ({
             <div className="flex items-center gap-2">
               <button
                 onClick={() => downloadPhotosAsZip(results, 'converted_photos.zip')}
-                className="px-4 py-2 bg-neutral-100 hover:bg-white text-neutral-950 rounded-xl text-xs font-semibold transition-colors flex items-center gap-1.5 shadow-sm"
+                className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold transition-all shadow-md shadow-blue-500/25 flex items-center gap-2"
               >
-                <Download className="w-3.5 h-3.5" />
+                <Download className="w-4 h-4" />
                 <span>Download All as ZIP</span>
               </button>
             </div>
@@ -399,31 +386,31 @@ export const PdfToPhotoConverter: React.FC<PdfToPhotoConverterProps> = ({
             {results.map((photo, idx) => (
               <div
                 key={idx}
-                className="group relative bg-neutral-950 border border-neutral-800 rounded-xl p-2.5 flex flex-col justify-between overflow-hidden hover:border-neutral-700 transition-colors"
+                className="group relative bg-white border border-slate-200 rounded-2xl p-2.5 flex flex-col justify-between overflow-hidden hover:border-blue-300 hover:shadow-md transition-all"
               >
                 {/* Photo Preview */}
                 <div
                   onClick={() => setPreviewPhoto(photo)}
-                  className="relative aspect-[3/4] w-full rounded-lg bg-neutral-900 flex items-center justify-center overflow-hidden cursor-pointer mb-2"
+                  className="relative aspect-[3/4] w-full rounded-xl bg-slate-100 flex items-center justify-center overflow-hidden cursor-pointer mb-2 border border-slate-100"
                 >
                   <img
                     src={photo.dataUrl}
                     alt={photo.fileName}
                     className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                    <span className="p-1.5 rounded-full bg-black/60 text-white hover:scale-110 transition-transform">
+                  <div className="absolute inset-0 bg-blue-900/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                    <span className="p-2 rounded-full bg-white/90 text-blue-600 shadow-md hover:scale-110 transition-transform">
                       <Eye className="w-4 h-4" />
                     </span>
                   </div>
-                  <span className="absolute bottom-1 right-1 bg-black/70 text-[10px] font-mono px-1.5 py-0.5 rounded text-neutral-300">
+                  <span className="absolute bottom-1.5 right-1.5 bg-slate-900/75 backdrop-blur-xs text-[10px] font-mono px-2 py-0.5 rounded-md text-white font-semibold">
                     p.{photo.pageNumber}
                   </span>
                 </div>
 
                 <div className="truncate">
-                  <p className="text-xs font-medium text-neutral-200 truncate">{photo.fileName}</p>
-                  <p className="text-[11px] font-mono text-neutral-400 tabular-nums">
+                  <p className="text-xs font-bold text-slate-900 truncate">{photo.fileName}</p>
+                  <p className="text-[11px] font-mono text-slate-500 tabular-nums">
                     {formatBytes(photo.size)} · {photo.width}x{photo.height}
                   </p>
                 </div>
@@ -431,9 +418,9 @@ export const PdfToPhotoConverter: React.FC<PdfToPhotoConverterProps> = ({
                 {/* Direct Download Button */}
                 <button
                   onClick={() => downloadSingleFile(photo.blob, photo.fileName)}
-                  className="mt-2 w-full py-1 text-xs text-neutral-300 hover:text-white bg-neutral-900 hover:bg-neutral-800 border border-neutral-800 rounded-lg transition-colors flex items-center justify-center gap-1"
+                  className="mt-2.5 w-full py-1.5 text-xs font-semibold text-blue-600 hover:text-white bg-blue-50 hover:bg-blue-600 border border-blue-100 rounded-xl transition-all flex items-center justify-center gap-1.5 shadow-xs"
                 >
-                  <Download className="w-3 h-3" />
+                  <Download className="w-3.5 h-3.5" />
                   <span>Download</span>
                 </button>
               </div>
@@ -442,14 +429,14 @@ export const PdfToPhotoConverter: React.FC<PdfToPhotoConverterProps> = ({
 
           {/* Cloud Vault feedback */}
           {savedToCloud && (
-            <div className="flex items-center justify-between p-3 rounded-xl bg-neutral-950/60 border border-neutral-800 text-xs text-neutral-400">
-              <span className="flex items-center gap-2">
-                <Cloud className="w-4 h-4 text-neutral-300" />
+            <div className="flex items-center justify-between p-3.5 rounded-2xl bg-blue-50/90 border border-blue-100 text-xs text-blue-800">
+              <span className="flex items-center gap-2 font-medium">
+                <Cloud className="w-4 h-4 text-blue-600" />
                 <span>Rendered photos stored in your personal Cloud Vault.</span>
               </span>
               <button
                 onClick={onGoToVault}
-                className="text-neutral-200 hover:underline font-medium"
+                className="text-blue-700 hover:underline font-bold"
               >
                 View in Vault &rarr;
               </button>

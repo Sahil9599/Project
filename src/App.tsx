@@ -11,107 +11,107 @@ function AppContent() {
   const [activeTab, setActiveTab] = useState<'photo-to-pdf' | 'pdf-to-photo' | 'cloud-vault' | 'history'>('photo-to-pdf');
 
   return (
-    <div className="min-h-screen relative bg-neutral-950 text-neutral-100 flex flex-col font-sans selection:bg-neutral-800 selection:text-white">
-      {/* Dynamic Animated Ambient Background */}
+    <div className="min-h-screen relative text-slate-800 flex flex-col font-sans selection:bg-blue-600 selection:text-white">
+      {/* Dynamic Animated Ambient Wallpaper Background */}
       <AnimatedBackground />
 
       <div className="relative z-10 flex flex-col min-h-screen">
-        {/* Top Bar Contract (3 Zones) */}
+        {/* Modern Frosted Header */}
         <Header
           activeTab={activeTab}
           setActiveTab={setActiveTab}
         />
 
         {/* Main Workspace Viewport */}
-        <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        {/* Mode Switcher Banner (Below Header) */}
-        <div className="mb-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 border-b border-neutral-800/80 pb-6">
-          <div className="flex items-center gap-1.5 p-1 bg-neutral-900 border border-neutral-800 rounded-xl self-start">
-            <button
-              onClick={() => setActiveTab('photo-to-pdf')}
-              className={`px-4 py-2 text-xs font-medium rounded-lg transition-colors flex items-center gap-2 ${
-                activeTab === 'photo-to-pdf'
-                  ? 'bg-neutral-100 text-neutral-950 shadow-sm'
-                  : 'text-neutral-400 hover:text-neutral-200'
-              }`}
-            >
-              <FileImage className="w-3.5 h-3.5" />
-              <span>Photo to PDF</span>
-            </button>
-            <button
-              onClick={() => setActiveTab('pdf-to-photo')}
-              className={`px-4 py-2 text-xs font-medium rounded-lg transition-colors flex items-center gap-2 ${
-                activeTab === 'pdf-to-photo'
-                  ? 'bg-neutral-100 text-neutral-950 shadow-sm'
-                  : 'text-neutral-400 hover:text-neutral-200'
-              }`}
-            >
-              <FileText className="w-3.5 h-3.5" />
-              <span>PDF to Photo</span>
-            </button>
-          </div>
-
-          <div className="flex items-center gap-3 text-xs text-neutral-400">
-            <div className="flex items-center gap-1.5">
-              <Shield className="w-3.5 h-3.5 text-neutral-300" />
-              <span>Client-Side Processing & Privacy Isolation</span>
+        <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+          {/* Mode Switcher Banner (Below Header) */}
+          <div className="mb-8 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-1.5 p-1.5 bg-white/80 backdrop-blur-xl border border-white/60 shadow-lg shadow-blue-950/5 rounded-2xl self-start">
+              <button
+                onClick={() => setActiveTab('photo-to-pdf')}
+                className={`px-4 py-2 text-xs font-semibold rounded-xl transition-all flex items-center gap-2 ${
+                  activeTab === 'photo-to-pdf'
+                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+                }`}
+              >
+                <FileImage className="w-3.5 h-3.5" />
+                <span>Photo to PDF</span>
+              </button>
+              <button
+                onClick={() => setActiveTab('pdf-to-photo')}
+                className={`px-4 py-2 text-xs font-semibold rounded-xl transition-all flex items-center gap-2 ${
+                  activeTab === 'pdf-to-photo'
+                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+                }`}
+              >
+                <FileText className="w-3.5 h-3.5" />
+                <span>PDF to Photo</span>
+              </button>
             </div>
-            <button
-              onClick={() => setActiveTab('cloud-vault')}
-              className="text-neutral-300 hover:text-white hover:underline flex items-center gap-1 font-medium"
-            >
-              <HardDrive className="w-3.5 h-3.5" />
-              <span>Personal Vault</span>
-            </button>
-          </div>
-        </div>
 
-        {/* Tab Views */}
-        {activeTab === 'photo-to-pdf' && (
-          <PhotoToPdfConverter
-            onGoToVault={() => setActiveTab('cloud-vault')}
-          />
-        )}
-
-        {activeTab === 'pdf-to-photo' && (
-          <PdfToPhotoConverter
-            onGoToVault={() => setActiveTab('cloud-vault')}
-          />
-        )}
-
-        {activeTab === 'cloud-vault' && (
-          <HistoryVault
-            initialSubTab="vault"
-            onNavigateToConvert={(t) => setActiveTab(t)}
-          />
-        )}
-
-        {activeTab === 'history' && (
-          <HistoryVault
-            initialSubTab="history"
-            onNavigateToConvert={(t) => setActiveTab(t)}
-          />
-        )}
-      </main>
-
-      {/* Minimalist Anti-Slop Footer */}
-      <footer className="border-t border-neutral-900 bg-neutral-950 py-8 text-neutral-500 text-xs">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <span className="font-semibold text-neutral-400">DocuMorph</span>
-            <span aria-hidden="true">·</span>
-            <span>Batch Conversion & Secure Document Studio</span>
+            <div className="flex items-center gap-3 text-xs">
+              <div className="flex items-center gap-1.5 px-3 py-2 bg-white/75 backdrop-blur-xl border border-white/60 rounded-xl shadow-sm text-slate-700 font-medium">
+                <Shield className="w-3.5 h-3.5 text-blue-600" />
+                <span>Client-Side Processing & Privacy Isolation</span>
+              </div>
+              <button
+                onClick={() => setActiveTab('cloud-vault')}
+                className="px-3 py-2 bg-white/75 backdrop-blur-xl border border-white/60 rounded-xl shadow-sm text-slate-700 hover:text-blue-600 hover:bg-white/95 transition-all flex items-center gap-1.5 font-semibold"
+              >
+                <HardDrive className="w-3.5 h-3.5 text-blue-600" />
+                <span>Personal Vault</span>
+              </button>
+            </div>
           </div>
 
-          <div className="flex items-center gap-4 text-neutral-400">
-            <span>High-Fidelity Compression</span>
-            <span aria-hidden="true">·</span>
-            <span>Zero Server Re-encoding</span>
-            <span aria-hidden="true">·</span>
-            <span>Personal UID Cloud Isolation</span>
+          {/* Tab Views */}
+          {activeTab === 'photo-to-pdf' && (
+            <PhotoToPdfConverter
+              onGoToVault={() => setActiveTab('cloud-vault')}
+            />
+          )}
+
+          {activeTab === 'pdf-to-photo' && (
+            <PdfToPhotoConverter
+              onGoToVault={() => setActiveTab('cloud-vault')}
+            />
+          )}
+
+          {activeTab === 'cloud-vault' && (
+            <HistoryVault
+              initialSubTab="vault"
+              onNavigateToConvert={(t) => setActiveTab(t)}
+            />
+          )}
+
+          {activeTab === 'history' && (
+            <HistoryVault
+              initialSubTab="history"
+              onNavigateToConvert={(t) => setActiveTab(t)}
+            />
+          )}
+        </main>
+
+        {/* Minimalist Frosted Footer */}
+        <footer className="border-t border-white/40 bg-white/70 backdrop-blur-xl py-6 text-slate-600 text-xs mt-auto shadow-xs">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-slate-900">DocuMorph</span>
+              <span aria-hidden="true">·</span>
+              <span className="font-medium">Batch Conversion & Secure Document Studio</span>
+            </div>
+
+            <div className="flex items-center gap-4 text-slate-600 font-medium">
+              <span>High-Fidelity Compression</span>
+              <span aria-hidden="true">·</span>
+              <span>Zero Server Re-encoding</span>
+              <span aria-hidden="true">·</span>
+              <span>Encrypted Personal Vault</span>
+            </div>
           </div>
-        </div>
-      </footer>
+        </footer>
       </div>
     </div>
   );

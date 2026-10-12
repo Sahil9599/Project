@@ -80,7 +80,7 @@ export async function convertPdfToImages(
     if (options.pageRange === 'first') {
       targetPages = [1];
     } else if (options.pageRange === 'custom') {
-      targetPages = parseCustomPageRange(options.customRange, totalDocPages);
+      targetPages = parseCustomPageRange(options.customRange || '', totalDocPages);
       if (targetPages.length === 0) targetPages = [1];
     } else {
       targetPages = Array.from({ length: totalDocPages }, (_, i) => i + 1);

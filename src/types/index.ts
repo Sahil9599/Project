@@ -81,7 +81,7 @@ export interface PdfToPhotoOptions {
   scale: number; // 1.0 (72dpi), 2.0 (144dpi), 3.0 (216dpi)
   quality: number; // 0.1 to 1.0
   pageRange: 'all' | 'first' | 'custom';
-  customRange: string; // e.g. "1-5, 8"
+  customRange?: string; // e.g. "1-5, 8"
 }
 
 export interface ConvertedPhotoResult {

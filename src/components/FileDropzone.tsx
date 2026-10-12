@@ -81,10 +81,10 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       onClick={() => !disabled && fileInputRef.current?.click()}
-      className={`relative w-full rounded-2xl border-2 border-dashed transition-all duration-200 cursor-pointer p-8 md:p-12 text-center flex flex-col items-center justify-center gap-3 ${
+      className={`relative w-full rounded-3xl border-2 border-dashed transition-all duration-200 cursor-pointer p-8 md:p-12 text-center flex flex-col items-center justify-center gap-3 backdrop-blur-xl shadow-xl shadow-blue-950/5 ${
         isDragOver
-          ? 'border-neutral-200 bg-neutral-900/80 scale-[0.99]'
-          : 'border-neutral-800 hover:border-neutral-700 bg-neutral-900/40 hover:bg-neutral-900/60'
+          ? 'border-blue-600 bg-blue-50/90 scale-[0.99] ring-4 ring-blue-500/20'
+          : 'border-blue-200 hover:border-blue-400 bg-white/80 hover:bg-white/95'
       } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
     >
       <input
@@ -97,24 +97,24 @@ export const FileDropzone: React.FC<FileDropzoneProps> = ({
         disabled={disabled}
       />
 
-      <div className="w-14 h-14 rounded-full bg-neutral-800 flex items-center justify-center text-neutral-300 mb-1 transition-transform group-hover:scale-105">
+      <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-blue-500 flex items-center justify-center text-white mb-1 shadow-lg shadow-blue-500/30 transition-transform duration-200 hover:scale-105">
         {mode === 'photo' ? (
-          <FileImage className="w-6 h-6 stroke-[1.5]" />
+          <FileImage className="w-7 h-7 stroke-[1.8]" />
         ) : (
-          <FileText className="w-6 h-6 stroke-[1.5]" />
+          <FileText className="w-7 h-7 stroke-[1.8]" />
         )}
       </div>
 
       <div className="space-y-1 max-w-md">
-        <h3 className="text-base font-semibold text-neutral-100">{title}</h3>
-        <p className="text-sm text-neutral-400">{description}</p>
+        <h3 className="text-base font-bold text-slate-900">{title}</h3>
+        <p className="text-sm text-slate-600">{description}</p>
       </div>
 
-      <div className="flex items-center gap-2 mt-2 text-xs text-neutral-400 font-medium">
-        <UploadCloud className="w-4 h-4 text-neutral-300" />
+      <div className="flex items-center gap-2 mt-2 text-xs text-slate-500 font-semibold bg-blue-50/70 border border-blue-100/80 px-3.5 py-1.5 rounded-xl">
+        <UploadCloud className="w-4 h-4 text-blue-600" />
         <span>Drop files here or click to browse</span>
-        <span aria-hidden="true">·</span>
-        <span>Batch processing enabled</span>
+        <span aria-hidden="true" className="text-blue-300">·</span>
+        <span className="text-blue-700">Batch processing enabled</span>
       </div>
     </div>
   );
