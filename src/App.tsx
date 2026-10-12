@@ -94,21 +94,35 @@ function AppContent() {
           )}
         </main>
 
-        {/* Minimalist Frosted Footer */}
-        <footer className="border-t border-white/40 bg-white/70 backdrop-blur-xl py-6 text-slate-600 text-xs mt-auto shadow-xs">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <span className="font-bold text-slate-900">DocuMorph</span>
-              <span aria-hidden="true">·</span>
-              <span className="font-medium">Batch Conversion & Secure Document Studio</span>
-            </div>
+        {/* Floating Liquid Glass Bottom Footer */}
+        <footer className="w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 mt-auto pt-6 pb-6">
+          <div className="liquid-glass relative w-full overflow-hidden shadow-lg shadow-blue-950/5">
+            {/* Liquid Glass Layers from CSS */}
+            <div className="liquid-glass--bend" />
+            <div className="liquid-glass--face" />
+            <div className="liquid-glass--edge" />
 
-            <div className="flex items-center gap-4 text-slate-600 font-medium">
-              <span>High-Fidelity Compression</span>
-              <span aria-hidden="true">·</span>
-              <span>Zero Server Re-encoding</span>
-              <span aria-hidden="true">·</span>
-              <span>Encrypted Personal Vault</span>
+            {/* Bottom Interactive Content */}
+            <div className="relative z-10 px-4 sm:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+              <div className="flex items-center gap-2">
+                <span className="font-bold tracking-tight bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 bg-clip-text text-transparent">
+                  DocuMorph
+                </span>
+                <span aria-hidden="true" className="text-slate-400">·</span>
+                <span className="font-medium text-slate-700">Batch Conversion & Secure Document Studio</span>
+              </div>
+
+              <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+                <span className="liquid-glass__link px-3 py-1 bg-white/45 text-[11px] font-semibold text-slate-700 select-none">
+                  High-Fidelity Compression
+                </span>
+                <span className="liquid-glass__link px-3 py-1 bg-white/45 text-[11px] font-semibold text-slate-700 select-none">
+                  Zero Server Re-encoding
+                </span>
+                <span className="liquid-glass__link px-3 py-1 bg-white/45 text-[11px] font-semibold text-slate-700 select-none">
+                  Encrypted Personal Vault
+                </span>
+              </div>
             </div>
           </div>
         </footer>

@@ -515,7 +515,7 @@ export const PhotoToPdfConverter: React.FC<PhotoToPdfConverterProps> = ({
             <button
               onClick={handleConvert}
               disabled={isProcessing || items.length === 0}
-              className="w-full sm:w-auto px-7 py-3 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500 hover:from-blue-500 hover:to-indigo-500 text-white rounded-2xl text-xs font-bold transition-all shadow-lg shadow-blue-500/30 disabled:opacity-50 flex items-center justify-center gap-2"
+              className="liquid-glass-btn w-full sm:w-auto px-7 py-3 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500 hover:from-blue-500 hover:to-indigo-500 text-white rounded-2xl text-xs font-bold transition-all shadow-lg shadow-blue-500/30 disabled:opacity-50 flex items-center justify-center gap-2"
             >
               <FileText className="w-4 h-4" />
               <span>Convert {items.length} Photo{items.length === 1 ? '' : 's'} to PDF</span>
@@ -563,7 +563,7 @@ export const PhotoToPdfConverter: React.FC<PhotoToPdfConverterProps> = ({
               {results.length === 1 ? (
                 <button
                   onClick={() => downloadSingleFile(results[0].blob, results[0].fileName)}
-                  className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold transition-all shadow-md shadow-blue-500/25 flex items-center gap-2"
+                  className="liquid-glass-btn px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold transition-all shadow-md shadow-blue-500/25 flex items-center gap-2"
                 >
                   <Download className="w-4 h-4" />
                   <span>Download PDF</span>
@@ -571,7 +571,7 @@ export const PhotoToPdfConverter: React.FC<PhotoToPdfConverterProps> = ({
               ) : (
                 <button
                   onClick={() => downloadPdfsAsZip(results, 'converted_pdfs.zip')}
-                  className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold transition-all shadow-md shadow-blue-500/25 flex items-center gap-2"
+                  className="liquid-glass-btn px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold transition-all shadow-md shadow-blue-500/25 flex items-center gap-2"
                 >
                   <Download className="w-4 h-4" />
                   <span>Download All as ZIP</span>

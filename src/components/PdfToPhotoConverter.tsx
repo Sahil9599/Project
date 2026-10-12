@@ -334,7 +334,7 @@ export const PdfToPhotoConverter: React.FC<PdfToPhotoConverterProps> = ({
             <button
               onClick={handleConvert}
               disabled={isProcessing || pdfItems.length === 0}
-              className="w-full sm:w-auto px-7 py-3 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500 hover:from-blue-500 hover:to-indigo-500 text-white rounded-2xl text-xs font-bold transition-all shadow-lg shadow-blue-500/30 disabled:opacity-50 flex items-center justify-center gap-2"
+              className="liquid-glass-btn w-full sm:w-auto px-7 py-3 bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-500 hover:from-blue-500 hover:to-indigo-500 text-white rounded-2xl text-xs font-bold transition-all shadow-lg shadow-blue-500/30 disabled:opacity-50 flex items-center justify-center gap-2"
             >
               <Sparkles className="w-4 h-4" />
               <span>Render {pdfItems.length} PDF{pdfItems.length === 1 ? '' : 's'} to Photos</span>
@@ -373,7 +373,7 @@ export const PdfToPhotoConverter: React.FC<PdfToPhotoConverterProps> = ({
             <div className="flex items-center gap-2">
               <button
                 onClick={() => downloadPhotosAsZip(results, 'converted_photos.zip')}
-                className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold transition-all shadow-md shadow-blue-500/25 flex items-center gap-2"
+                className="liquid-glass-btn px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white rounded-xl text-xs font-bold transition-all shadow-md shadow-blue-500/25 flex items-center gap-2"
               >
                 <Download className="w-4 h-4" />
                 <span>Download All as ZIP</span>
