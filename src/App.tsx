@@ -3,11 +3,12 @@ import { AuthProvider } from './context/AuthContext';
 import { Header } from './components/Header';
 import { PhotoToPdfConverter } from './components/PhotoToPdfConverter';
 import { PdfToPhotoConverter } from './components/PdfToPhotoConverter';
+import { SignWatermarkConverter } from './components/SignWatermarkConverter';
 import { AnimatedBackground } from './components/AnimatedBackground';
-import { FileImage, FileText, Shield } from 'lucide-react';
+import { FileImage, FileText, Stamp, Shield } from 'lucide-react';
 
 function AppContent() {
-  const [activeTab, setActiveTab] = useState<'photo-to-pdf' | 'pdf-to-photo'>('photo-to-pdf');
+  const [activeTab, setActiveTab] = useState<'photo-to-pdf' | 'pdf-to-photo' | 'sign-watermark'>('photo-to-pdf');
 
   return (
     <div className="min-h-screen relative text-slate-800 flex flex-col font-sans selection:bg-blue-600 selection:text-white">
@@ -48,6 +49,17 @@ function AppContent() {
                 <FileText className="w-3.5 h-3.5" />
                 <span>PDF to Photo</span>
               </button>
+              <button
+                onClick={() => setActiveTab('sign-watermark')}
+                className={`px-4 py-2 text-xs font-semibold rounded-xl transition-all flex items-center gap-2 ${
+                  activeTab === 'sign-watermark'
+                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+                }`}
+              >
+                <Stamp className="w-3.5 h-3.5" />
+                <span>Sign & Watermark</span>
+              </button>
             </div>
 
             <div className="flex items-center gap-3 text-xs">
@@ -62,6 +74,8 @@ function AppContent() {
           {activeTab === 'photo-to-pdf' && <PhotoToPdfConverter />}
 
           {activeTab === 'pdf-to-photo' && <PdfToPhotoConverter />}
+
+          {activeTab === 'sign-watermark' && <SignWatermarkConverter />}
         </main>
 
         {/* Floating Liquid Glass Bottom Footer */}

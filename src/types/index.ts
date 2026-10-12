@@ -102,3 +102,43 @@ export interface ConvertedPdfResult {
   size: number;
   pageCount: number;
 }
+
+export interface WatermarkSettings {
+  enabled: boolean;
+  type: 'text' | 'image';
+  text: string;
+  textColor: string;
+  textSize: number;
+  opacity: number; // 0.05 to 1.0
+  rotation: number; // degrees, e.g. -45, 0, 90
+  repeat: boolean; // Tiled pattern
+  imageDataUrl?: string;
+  imageScale: number; // 0.2 to 2.0
+  position: 'center' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+  targetPages: 'all' | 'first' | 'last' | 'custom';
+  customPages?: string;
+}
+
+export interface SignatureSettings {
+  enabled: boolean;
+  signatureDataUrl?: string; // transparent png data URL
+  position: 'bottom-right' | 'bottom-left' | 'bottom-center' | 'top-right' | 'custom';
+  customXPercent?: number; // 0 to 100
+  customYPercent?: number; // 0 to 100
+  scale: number; // 0.4 to 2.0
+  targetPages: 'all' | 'first' | 'last' | 'custom';
+  customPages?: string;
+  dateStamp?: {
+    enabled: boolean;
+    text: string;
+    color: string;
+  };
+}
+
+export interface ProcessedPdfResult {
+  fileName: string;
+  blob: Blob;
+  dataUrl: string;
+  size: number;
+  pageCount: number;
+}
